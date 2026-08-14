@@ -1,0 +1,21 @@
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+
+# 本地预览与中间产物
+preview/
+out_*/
+
+# 内部工作文件（不随仓库发布）
+越南语背单词App.html
+越南语背单词App使用说明.pdf
+词库校对稿.csv
+词库校对稿.xlsx
+修改清单.csv
+删除清单.csv
+剔除清单_低频词.csv
+新增清单.csv
+新增词条_审阅.csv
