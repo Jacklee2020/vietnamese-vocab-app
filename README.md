@@ -1,5 +1,9 @@
 # 🇻🇳 越南语千词斩 · Vietnamese Vocabulary Trainer
 
+[![GitHub stars](https://img.shields.io/github/stars/Jacklee2020/vietnamese-vocab-app?style=flat-square&label=Stars)](https://github.com/Jacklee2020/vietnamese-vocab-app/stargazers)
+[![License](https://img.shields.io/badge/License-MIT%20%2B%20Data%20Reserved-blue?style=flat-square)](LICENSE)
+[![CI](https://img.shields.io/github/actions/workflow/status/Jacklee2020/vietnamese-vocab-app/ci.yml?style=flat-square&label=CI)](https://github.com/Jacklee2020/vietnamese-vocab-app/actions)
+
 一款**离线可用**的越南语词汇背诵 PWA。手机、电脑浏览器直接可用——无需注册、无需服务器、首次打开后**断网也能学**。
 
 > 📚 **3378 个核心词汇 · 12 大分类 · 真人发音 · 间隔复习 · 三种自测**
@@ -22,7 +26,17 @@
 
 ---
 
+## ⭐ 支持项目
+
+如果这个 App 对你有帮助，欢迎给仓库点个 **Star**（页面右上角 ⭐ 按钮）——这是对开源作者最大的鼓励，也能帮助更多越南语学习者发现它。
+
+- [点这里直接打开仓库](https://github.com/Jacklee2020/vietnamese-vocab-app)
+- 右上角 **Star ⭐** → 一键收藏，方便随时回来
+
+---
+
 ## 🚀 快速开始
+
 
 ### 1. 获取 App
 
@@ -170,7 +184,17 @@ vocab_app/
 
 纯 HTML + CSS + JavaScript，**零依赖、无构建步骤**。PWA = Web App Manifest + Service Worker，数据存储于浏览器 localStorage。
 
+## 🗺️ 路线图
+
+- [x] 3378 词 · 12 大类词库与 PWA 应用
+- [x] 卡片式间隔复习、三种自测、离线缓存、进度备份
+- [ ] 词库持续扩充与例句补充（母语者校对）
+- [ ] 自适应复习算法（按个人错词率动态调整）
+- [ ] 学习统计报告（周报 / 月度回顾）
+- [ ] 云端同步（可选，默认仍保持离线）
+
 ## 📄 许可
+
 
 - 代码：MIT License
 - 词库数据：保留所有权利（All Rights Reserved），仅供个人学习交流，未经授权不得商用
