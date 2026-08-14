@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validate-dict:
+    name: 校验词库
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: 词库格式与完整性校验
+        run: python3 scripts/validate_dict.py 词库_合并版.csv
+
+  validate-pwa:
+    name: 校验 PWA 资源
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: 检查 PWA 必备文件
+        run: |
+          test -f pwa/index.html
+          test -f pwa/sw.js
+          test -f pwa/manifest.webmanifest
+          test -s pwa/icon-192.png
+          test -s pwa/icon-512.png
+          test -s pwa/icon-512-maskable.png
+          test -s pwa/apple-touch-icon.png
+          grep -q "const WORDS" pwa/index.html
+          echo "✅ PWA 资源完整"
