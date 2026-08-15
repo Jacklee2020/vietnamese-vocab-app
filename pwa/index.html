@@ -3551,8 +3551,7 @@ const keyOf = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, 
 const todayKey = () => keyOf(new Date());
 const shortTopic = t => t.replace(/^[一二三四五六七八九十]+、/, '');
 const emojiFor = t => { const i = TOPICS.indexOf(t); return ['🔢','🕐','👥','🍜','🚗','🛍️','🏨','💼','💰','🏥','⭐','💬'][i] || '📚'; };
-const TOPICS = [];
-WORDS_DATA.forEach(w => { if (TOPICS[TOPICS.length - 1] !== w[0]) TOPICS.push(w[0]); });
+const TOPICS = [...new Set(WORDS_DATA.map(w => w[0]))];
 
 /* ============ 状态 ============ */
 const KEY = 'vnvocab3000v1';
@@ -4047,6 +4046,7 @@ function renderWordList() {
     if (q && !w[1].toLowerCase().includes(q) && !w[2].toLowerCase().includes(q)) return;
     ids.push(i);
   });
+  ids.sort((a, b) => { const ta = TOPICS.indexOf(WORDS_DATA[a][0]), tb = TOPICS.indexOf(WORDS_DATA[b][0]); return ta !== tb ? ta - tb : a - b; });
   const total = ids.length;
   const shown = ids.slice(0, WORD_FILTER._n || 400);
   $('#main').innerHTML =
