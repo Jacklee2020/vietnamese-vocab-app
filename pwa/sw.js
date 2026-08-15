@@ -9,7 +9,6 @@ self.addEventListener('activate', e => {
 });
 self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET') return;
-  // HTML 导航走 network-first：更新版本能及时生效；离线时回退缓存
   if (e.request.mode === 'navigate') {
     e.respondWith(
       fetch(e.request).then(res => {
@@ -20,7 +19,6 @@ self.addEventListener('fetch', e => {
     );
     return;
   }
-  // 静态资源 cache-first，后台更新（stale-while-revalidate）
   e.respondWith(
     caches.match(e.request).then(hit => {
       const refresh = fetch(e.request).then(res => {

@@ -30,7 +30,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue"
 input,textarea{-webkit-user-select:text;user-select:text}
 #app{max-width:520px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;position:relative;background:var(--bg)}
 /* header */
-.top{position:sticky;top:0;z-index:30;background:var(--grad);color:#fff;padding:16px 16px 14px;border-radius:0 0 24px 24px;box-shadow:0 4px 14px rgba(232,69,44,.25)}
+.top{position:sticky;top:0;z-index:30;background:var(--grad);color:#fff;padding:16px 16px 14px;border-radius:0 0 24px 24px;box-shadow:0 4px 14px rgba(74,163,223,.25)}
 .top h1{font-size:20px;font-weight:800;letter-spacing:.5px;display:flex;align-items:center;gap:8px}
 .top .sub{font-size:12px;opacity:.85;margin-top:3px}
 .topbar-row{display:flex;align-items:center;gap:10px}
@@ -46,20 +46,20 @@ main{flex:1;padding:14px 14px calc(var(--tabh) + 24px);overflow-y:auto}
 .tab.on .ic{filter:none;opacity:1}
 /* cards & buttons */
 .card{background:var(--card);border-radius:18px;box-shadow:var(--shadow);padding:16px}
-.btn{display:block;width:100%;border:none;border-radius:14px;padding:15px;font-size:16px;font-weight:700;cursor:pointer;color:#fff;background:var(--grad);box-shadow:0 6px 16px rgba(232,69,44,.3);transition:transform .08s}
+.btn{display:block;width:100%;border:none;border-radius:14px;padding:15px;font-size:16px;font-weight:700;cursor:pointer;color:#fff;background:var(--grad);box-shadow:0 6px 16px rgba(74,163,223,.3);transition:transform .08s}
 .btn:active{transform:scale(.97)}
 .btn.ghost{background:var(--card);color:var(--pri);box-shadow:none;border:2px solid var(--pri)}
 .btn.soft{background:var(--okbg);color:var(--ok);box-shadow:none}
 .btn.gray{background:#e5e7eb;color:#4b5563;box-shadow:none}
 .btn.sm{padding:10px;font-size:14px;border-radius:12px}
 /* home */
-.hero{background:var(--grad);border-radius:20px;color:#fff;padding:18px;position:relative;overflow:hidden;box-shadow:0 8px 20px rgba(232,69,44,.3)}
+.hero{background:var(--grad);border-radius:20px;color:#fff;padding:18px;position:relative;overflow:hidden;box-shadow:0 8px 20px rgba(74,163,223,.3)}
 .hero .day{font-size:13px;opacity:.9}
 .hero .big{font-size:38px;font-weight:800;margin:6px 0 2px}
 .hero .streak{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.22);padding:5px 12px;border-radius:20px;font-size:13px;font-weight:700;margin-top:8px}
 .hero .ring-wrap{display:flex;align-items:center;gap:16px}
 .ring{width:96px;height:96px;border-radius:50%;background:conic-gradient(#fff var(--p,0%),rgba(255,255,255,.25) 0);display:flex;align-items:center;justify-content:center;flex:none;transition:--p .4s}
-.ring .inner{width:74px;height:74px;border-radius:50%;background:rgba(232,69,44,.95);display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800;font-size:20px}
+.ring .inner{width:74px;height:74px;border-radius:50%;background:rgba(74,163,223,.95);display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800;font-size:20px}
 .ring .inner small{font-size:10px;font-weight:600;opacity:.8}
 .chip{display:inline-block;background:var(--okbg);color:var(--ok);font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px}
 .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
@@ -98,7 +98,7 @@ main{flex:1;padding:14px 14px calc(var(--tabh) + 24px);overflow-y:auto}
 /* test */
 .seg{display:flex;background:var(--card);border-radius:14px;padding:4px;gap:4px;box-shadow:var(--shadow)}
 .seg button{flex:1;border:none;background:none;padding:10px 4px;border-radius:11px;font-size:13px;font-weight:700;color:var(--sub);cursor:pointer}
-.seg button.on{background:var(--grad);color:#fff;box-shadow:0 4px 10px rgba(232,69,44,.3)}
+.seg button.on{background:var(--grad);color:#fff;box-shadow:0 4px 10px rgba(74,163,223,.3)}
 .qword{font-size:34px;font-weight:800;text-align:center;margin:22px 0 6px}
 .qsub{text-align:center;color:var(--sub);font-size:13px;margin-bottom:16px}
 .opts{display:flex;flex-direction:column;gap:10px}
@@ -3577,11 +3577,13 @@ function hideWordNow(id) {
   const v = WORDS_DATA[id][1];
   if (!S.hidden.includes(v)) S.hidden.push(v);
   S.fav = S.fav.filter(f => f !== id);
-  save(); hideModal(); switchTab(TAB); toast('已隐藏：' + v);
+  save(); hideModal();
+  if (TAB === 'words' && WORD_FILTER.active) renderWordList(); else switchTab(TAB);
+  toast('已隐藏：' + v);
 }
 function hideWord(id) {
   const v = WORDS_DATA[id][1];
-  confirmBox('隐藏单词', '“' + v + '”将不再背诵。' + HIDDEN_TIP + '。', '隐藏', 'function(){ hideWordNow(' + id + '); }');
+  confirmBox('隐藏单词', '“' + v + '”将不再背诵。' + HIDDEN_TIP + '。', '隐藏', function () { hideWordNow(id); });
 }
 function restoreWord(id) {
   const v = WORDS_DATA[id][1];
@@ -4015,6 +4017,7 @@ function flashFav() {
 /* ============ 词表 ============ */
 let WORD_FILTER = { topic: null, q: '' };
 function renderWords() {
+  WORD_FILTER.active = false;
   $('#topbar').innerHTML = '<h1>📚 全部词表</h1><div class="sub">' + visCount() + ' 词 · ' + TOPICS.length + ' 类</div>';
   let html = TOPICS.map((t, i) => {
     const n = WORDS_DATA.filter(w => w[0] === t && !S.hidden.includes(w[1])).length;
@@ -4024,7 +4027,7 @@ function renderWords() {
       '<div class="cnt">' + l + ' / ' + n + '</div>' +
       '<span style="color:var(--sub)">›</span></div>';
   }).join('');
-  html += '<div class="topic-row" onclick="openTopic(-1)" style="background:var(--grad);color:#fff;border-radius:14px;padding:14px;margin-top:10px;box-shadow:0 6px 14px rgba(232,69,44,.25)">' +
+  html += '<div class="topic-row" onclick="openTopic(-1)" style="background:var(--grad);color:#fff;border-radius:14px;padding:14px;margin-top:10px;box-shadow:0 6px 14px rgba(74,163,223,.25)">' +
     '<span class="emoji">🗂️</span><div class="nm">全部词汇（含搜索）</div><div class="cnt" style="color:rgba(255,255,255,.8)">' + visCount() + '</div><span>›</span></div>';
   html += '<div class="topic-row" onclick="renderHidden()"><span class="emoji">🙈</span><div class="nm">已隐藏词汇（自定义词库）</div><div class="cnt">' + S.hidden.length + '</div><span>›</span></div>';
   $('#main').innerHTML = html + '<div class="foot-note">点击分类进入单词列表 · 星标加入生词本 · 隐藏单词可自定义词库</div>';
@@ -4034,6 +4037,7 @@ function openTopic(i) {
   renderWordList();
 }
 function renderWordList() {
+  WORD_FILTER.active = true;
   $('#topbar').innerHTML = '<div class="topbar-row"><button class="btn-back" onclick="renderWords()">‹</button><h1 style="font-size:17px">' + (WORD_FILTER.topic < 0 ? '全部词汇' : esc(shortTopic(TOPICS[WORD_FILTER.topic]))) + '</h1></div>';
   const q = (WORD_FILTER.q || '').toLowerCase();
   let ids = [];
@@ -4056,6 +4060,7 @@ function renderWordList() {
         '<div style="flex:1"><div class="v">' + esc(w[1]) + '</div><div class="m">' + esc(w[2]) + '</div></div>' +
         '<button class="icon-btn" onclick="event.stopPropagation();speak(\'' + esc(w[1]).replace(/'/g, "\\'") + '\')">🔊</button>' +
         '<button class="icon-btn' + (fav ? ' on' : '') + '" onclick="event.stopPropagation();toggleFav(' + id + ');renderWordList()">' + (fav ? '⭐' : '☆') + '</button>' +
+        '<button class="icon-btn" onclick="event.stopPropagation();hideWord(' + id + ')">🙈</button>' +
       '</div>';
     }).join('') +
     (shown.length < total ? '<div style="margin-top:14px"><button class="btn gray sm" onclick="WORD_FILTER._n=(WORD_FILTER._n||400)+400;renderWordList()">加载更多（' + (total - shown.length) + '）</button></div>' : '');

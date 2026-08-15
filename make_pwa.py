@@ -69,7 +69,7 @@ def main() -> int:
 
     # 4) Service Worker：HTML 走 network-first，静态资源 stale-while-revalidate
     sw = '''/* ''' + APP_NAME + ''' PWA 离线缓存 */
-const CACHE = '''' + CACHE_NAME + '''';
+const CACHE = ''' + "'" + CACHE_NAME + "'" + ''';
 const ASSETS = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-512-maskable.png', './apple-touch-icon.png'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));
@@ -112,7 +112,7 @@ self.addEventListener('fetch', e => {
         gd = ImageDraw.Draw(grad)
         for y in range(size):
             t = y / size
-            col = (int(232 - 8 * t), int(69 + 45 * t), int(44 + 15 * t), 255)
+            col = (int(74 + 57 * t), int(163 + 33 * t), int(223 + 16 * t), 255)
             gd.line([(0, y), (size, y)], fill=col)
         mask = Image.new('L', (size, size), 0)
         ImageDraw.Draw(mask).rounded_rectangle([0, 0, size - 1, size - 1], radius=r, fill=255)
