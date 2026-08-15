@@ -3557,12 +3557,16 @@ WORDS_DATA.forEach(w => { if (TOPICS[TOPICS.length - 1] !== w[0]) TOPICS.push(w[
 /* ============ 状态 ============ */
 const KEY = 'vnvocab3000v1';
 let S;
-function defaults() { return { v: 1, learned: {}, fav: [], hidden: [], days: {}, set: { perDay: 50, rate: 1, auto: true, dark: false } }; }
+function defaults() { return { v: 1, learned: {}, fav: [], hidden: [], days: {}, set: { perDay: 10, rate: 1, auto: true, dark: false } }; }
 function load() {
   try { const s = JSON.parse(localStorage.getItem(KEY)); if (s && s.v === 1) { if (!Array.isArray(s.hidden)) s.hidden = []; return s; } } catch (e) {}
   const s = defaults(); localStorage.setItem(KEY, JSON.stringify(s)); return s;
 }
 function save() { localStorage.setItem(KEY, JSON.stringify(S)); }
+function normalize() {
+  if (!Array.isArray(S.hidden)) S.hidden = [];
+  if (![10, 20, 50, 100].includes(S.set.perDay)) S.set.perDay = S.set.perDay >= 200 ? 100 : 10;
+}
 
 /* ============ 隐藏词（自定义词库） ============ */
 const HIDDEN_TIP = '已隐藏的单词不会出现在学习、测验、生词本和词表中，可在词表页底部「已隐藏」中恢复';
@@ -3603,7 +3607,7 @@ function renderHidden() {
     '<div class="foot-note">' + HIDDEN_TIP + '</div>';
 }
 S = load();
-if (![50, 100, 200, 300, 500].includes(S.set.perDay)) { S.set.perDay = 50; save(); }
+normalize(); save();
 if (S.set.dark) document.body.classList.add('dark');
 
 /* ============ 发音 ============ */
@@ -4075,7 +4079,7 @@ function renderMe() {
     '<div class="section-title">设置</div>' +
     '<div class="card" style="padding:6px 14px">' +
       '<div class="set-row"><div><div class="l">每日新词数</div><div class="d">当前 ' + S.set.perDay + ' 个</div></div>' +
-      '<div class="rate-seg">' + [50, 100, 200, 300, 500].map(n => '<button class="' + (S.set.perDay === n ? 'on' : '') + '" onclick="setPerDay(' + n + ')">' + n + '</button>').join('') + '</div></div>' +
+      '<div class="rate-seg">' + [10, 20, 50, 100].map(n => '<button class="' + (S.set.perDay === n ? 'on' : '') + '" onclick="setPerDay(' + n + ')">' + n + '</button>').join('') + '</div></div>' +
       '<div class="set-row"><div><div class="l">发音语速</div><div class="d">' + ['慢', '正常', '快'][Math.round(S.set.rate * 2) - 1] + '</div></div>' +
       '<div class="rate-seg">' + [['慢', 0.8], ['正常', 1], ['快', 1.2]].map(r => '<button class="' + (S.set.rate === r[1] ? 'on' : '') + '" onclick="setRate(' + r[1] + ')">' + r[0] + '</button>').join('') + '</div></div>' +
       '<div class="set-row"><div><div class="l">自动发音</div><div class="d">展示单词时自动朗读</div></div>' +
@@ -4124,7 +4128,7 @@ function importData(input) {
     try {
       const s = JSON.parse(rd.result);
       if (!s || s.v !== 1) throw new Error('bad');
-      S = s; if (S.set.dark) document.body.classList.add('dark'); save(); renderMe();
+      S = s; normalize(); if (S.set.dark) document.body.classList.add('dark'); save(); renderMe();
       toast('导入成功');
     } catch (e) { toast('文件格式不对'); }
   };
