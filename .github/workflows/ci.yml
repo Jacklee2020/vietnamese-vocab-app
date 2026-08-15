@@ -17,6 +17,17 @@ jobs:
       - name: 词库格式与完整性校验
         run: python3 scripts/validate_dict.py 词库_合并版.csv
 
+  validate-sync:
+    name: 校验词库与 HTML 同步
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: 校验 CSV 与 PWA 内嵌词库一致
+        run: python3 scripts/check_html_sync.py 词库_合并版.csv pwa/index.html
+
   validate-pwa:
     name: 校验 PWA 资源
     runs-on: ubuntu-latest

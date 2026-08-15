@@ -19,7 +19,7 @@ const check = (n, c, x) => { results.push(`${c ? 'PASS' : 'FAIL'} | ${n}${x ? ' 
   await page.goto(BASE + 'index.html', { waitUntil: 'load', timeout: 20000 });
   await page.waitForTimeout(500);
   let body = await page.textContent('body');
-  check('页面经 HTTP 正常渲染', body.includes('2963 词'), '');
+  check('页面经 HTTP 正常渲染', body.includes('越南语千词斩'), '');
 
   const reg = await page.evaluate(() => navigator.serviceWorker.getRegistration().then(r => r ? { scope: r.scope, state: r.active ? r.active.state : 'none' } : null));
   check('Service Worker 已注册', !!reg, reg && reg.state);
@@ -47,7 +47,7 @@ const check = (n, c, x) => { results.push(`${c ? 'PASS' : 'FAIL'} | ${n}${x ? ' 
   await page.reload({ waitUntil: 'load', timeout: 15000 }).catch(() => {});
   await page.waitForTimeout(800);
   const offline = await page.textContent('body');
-  check('离线刷新仍可用（SW 缓存）', offline.includes('2963 词'), '');
+  check('离线刷新仍可用（SW 缓存）', offline.includes('越南语千词斩'), '');
 
   await ctx.setOffline(false);
   await page.locator('main .btn').first().click();

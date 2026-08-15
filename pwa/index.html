@@ -3550,7 +3550,7 @@ const DAY = 86400000;
 const keyOf = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
 const todayKey = () => keyOf(new Date());
 const shortTopic = t => t.replace(/^[一二三四五六七八九十]+、/, '');
-const emojiFor = t => { const i = TOPICS.indexOf(t); return ['🔢','🕐','👥','🍜','🚗','🛍️','🏨','💼','💰','🏥','⭐'][i] || '📚'; };
+const emojiFor = t => { const i = TOPICS.indexOf(t); return ['🔢','🕐','👥','🍜','🚗','🛍️','🏨','💼','💰','🏥','⭐','💬'][i] || '📚'; };
 const TOPICS = [];
 WORDS_DATA.forEach(w => { if (TOPICS[TOPICS.length - 1] !== w[0]) TOPICS.push(w[0]); });
 
@@ -3625,12 +3625,15 @@ function toast(msg) {
   const t = $('#toast'); t.textContent = msg; t.classList.add('show');
   clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('show'), 1800);
 }
+let _confirmCb = null;
 function confirmBox(title, text, okLabel, cb) {
+  _confirmCb = typeof cb === 'function' ? cb : null;
   const m = $('#mask'); const d = $('#dialog');
   d.innerHTML = '<h3>' + esc(title) + '</h3><p>' + esc(text) + '</p>' +
     '<button class="btn gray sm" onclick="hideModal()">取消</button>' +
-    '<button class="btn sm" onclick="hideModal();(' + cb + ')()">' + esc(okLabel) + '</button>';
+    '<button class="btn sm" id="confirm-ok">' + esc(okLabel) + '</button>';
   m.classList.remove('hide');
+  $('#confirm-ok').onclick = function () { hideModal(); if (_confirmCb) _confirmCb(); };
 }
 function hideModal() { $('#mask').classList.add('hide'); }
 function wordModal(id) {
@@ -3968,7 +3971,7 @@ function flashFav() {
 /* ============ 词表 ============ */
 let WORD_FILTER = { topic: null, q: '' };
 function renderWords() {
-  $('#topbar').innerHTML = '<h1>📚 全部词表</h1><div class="sub">' + WORDS_DATA.length + ' 词 · 11 类</div>';
+  $('#topbar').innerHTML = '<h1>📚 全部词表</h1><div class="sub">' + WORDS_DATA.length + ' 词 · ' + TOPICS.length + ' 类</div>';
   let html = TOPICS.map((t, i) => {
     const n = WORDS_DATA.filter(w => w[0] === t).length;
     const l = WORDS_DATA.reduce((c, w, idx) => c + (w[0] === t && S.learned[idx] ? 1 : 0), 0);
@@ -4048,7 +4051,7 @@ function renderMe() {
       '<button class="btn sm" style="width:auto;padding:8px 16px;background:var(--bad)" onclick="resetData()">清空</button></div>' +
     '</div>' +
     '<input type="file" id="imp" accept="application/json" style="display:none" onchange="importData(this)">' +
-    '<div class="foot-note">数据版本 2026-08-11c<br>' + total + ' 词 · 11 类 · 单文件离线 App</div>';
+    '<div class="foot-note">数据版本 2026-08-11c<br>' + total + ' 词 · ' + TOPICS.length + ' 类 · PWA 离线 App</div>';
 }
 function heatmap() {
   let html = '';

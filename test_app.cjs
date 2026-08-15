@@ -1,10 +1,11 @@
-// App 功能测试：驱动 Chrome 渲染单文件 App，验证核心流程
+// App 功能测试：驱动 Chrome 渲染 PWA 版 App，验证核心流程
+// 用法：node test_app.cjs （需本机安装 playwright，并已登录 Chrome）
 const path = require('path');
 const fs = require('fs');
 const { chromium } = require('playwright');
 
-const APP = 'file:///Users/liqing/Documents/Codex/2026-08-05/zhe/vocab_app/%E8%B6%8A%E5%8D%97%E8%AF%AD%E8%83%8C%E5%8D%95%E8%AF%8DApp.html';
-const OUT = '/Users/liqing/Documents/Codex/2026-08-05/zhe/vocab_app/preview';
+const APP = 'file://' + path.resolve(__dirname, 'pwa/index.html');
+const OUT = path.join(__dirname, 'preview');
 const results = [];
 const consoleErrors = [];
 let pass = 0, fail = 0;
@@ -28,8 +29,7 @@ function check(name, cond, extra) {
 
   // 1. 首页
   const body = await page.textContent('body');
-  check('数据嵌入 2963 词', body.includes('2963 词'), '');
-  check('首页标题', body.includes('越南语背单词'), '');
+  check('首页标题', body.includes('越南语千词斩'), '');
   const startBtn = await page.textContent('.hero ~ * .btn, main .btn').catch(() => '');
   await page.waitForTimeout(300);
   const homeBtn = await page.locator('main .btn').first().textContent().catch(() => '');
@@ -103,11 +103,13 @@ function check(name, cond, extra) {
   await page.locator('.tab:has-text("词表")').click();
   await page.waitForTimeout(200);
   const topics = await page.locator('.topic-row').count();
-  check('词表 11 主题 + 全部', topics >= 11, 'topic-row=' + topics);
+  check('词表 12 主题 + 全部', topics >= 12, 'topic-row=' + topics);
   await page.locator('.topic-row').first().click();
   await page.waitForTimeout(200);
   const rows = await page.locator('.row').count();
   check('主题词列表有内容', rows > 0, 'rows=' + rows);
+  const totalWords = await page.evaluate(() => WORDS_DATA.length);
+  check('数据嵌入 3378 词', totalWords === 3378, 'WORDS_DATA=' + totalWords);
   await page.locator('.search').fill('Hà Nội');
   await page.waitForTimeout(300);
   const srch = await page.textContent('body');

@@ -1,5 +1,5 @@
-/* 越南语背单词 PWA 离线缓存 */
-const CACHE = 'vnvocab-v2';
+/* 越南语千词斩 PWA 离线缓存 */
+const CACHE = 'vnvocab-v3';
 const ASSETS = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-512-maskable.png', './apple-touch-icon.png'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));
@@ -9,11 +9,26 @@ self.addEventListener('activate', e => {
 });
 self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET') return;
+  // HTML 导航走 network-first：更新版本能及时生效；离线时回退缓存
+  if (e.request.mode === 'navigate') {
+    e.respondWith(
+      fetch(e.request).then(res => {
+        const copy = res.clone();
+        caches.open(CACHE).then(c => c.put(e.request, copy));
+        return res;
+      }).catch(() => caches.match(e.request).then(hit => hit || caches.match('./index.html')))
+    );
+    return;
+  }
+  // 静态资源 cache-first，后台更新（stale-while-revalidate）
   e.respondWith(
-    caches.match(e.request).then(hit => hit || fetch(e.request).then(res => {
-      const copy = res.clone();
-      caches.open(CACHE).then(c => c.put(e.request, copy));
-      return res;
-    }).catch(() => caches.match('./index.html')))
+    caches.match(e.request).then(hit => {
+      const refresh = fetch(e.request).then(res => {
+        const copy = res.clone();
+        caches.open(CACHE).then(c => c.put(e.request, copy));
+        return res;
+      }).catch(() => hit);
+      return hit || refresh;
+    })
   );
 });

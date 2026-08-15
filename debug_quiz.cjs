@@ -1,5 +1,5 @@
 const { chromium } = require('playwright');
-const APP = 'file:///Users/liqing/Documents/Codex/2026-08-05/zhe/vocab_app/%E8%B6%8A%E5%8D%97%E8%AF%AD%E8%83%8C%E5%8D%95%E8%AF%8DApp.html';
+const APP = 'file://' + require('path').resolve(__dirname, 'pwa/index.html');
 (async () => {
   const browser = await chromium.launch({
     executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
