@@ -3613,16 +3613,41 @@ if (S.set.dark) document.body.classList.add('dark');
 
 /* ============ 发音 ============ */
 let VOICE = null;
+let _ttsTipShown = false;
 function pickVoice() { try { const vs = speechSynthesis.getVoices(); VOICE = vs.find(v => v.lang && v.lang.toLowerCase().startsWith('vi')) || VOICE; } catch (e) {} }
 try { speechSynthesis.onvoiceschanged = pickVoice; pickVoice(); } catch (e) {}
+function viVoiceAvailable() {
+  try {
+    const vs = speechSynthesis.getVoices();
+    if (!vs || !vs.length) return true;
+    return vs.some(v => v.lang && v.lang.toLowerCase().startsWith('vi'));
+  } catch (e) { return true; }
+}
 function speak(text) {
   if (!('speechSynthesis' in window)) { toast('当前设备不支持语音'); return; }
+  if (!_ttsTipShown && !viVoiceAvailable()) {
+    _ttsTipShown = true;
+    const ios = /iP(hone|ad|od)/.test(navigator.userAgent || '');
+    guideBox('未检测到越南语语音',
+      '当前设备可能未安装越南语语音包，发音会无声或不准。<br>请按以下步骤下载：<br><br>' +
+      (ios
+        ? '① 打开「设置」→「辅助功能」<br>② 「朗读内容」→「声音」<br>③ 下载「越南语（Tiếng Việt）」语音'
+        : '① 打开「设置」→「系统」<br>② 「语言与输入法」→「文字转语音」（TTS）<br>③ 下载越南语语音数据') +
+      '<br><br>下载完成后返回本页，点「🔊」即可发音。');
+  }
   try {
     speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
     u.lang = 'vi-VN'; if (VOICE) u.voice = VOICE; u.rate = S.set.rate;
     speechSynthesis.speak(u);
   } catch (e) { toast('语音播放失败'); }
+}
+function guideBox(title, html) {
+  const m = $('#mask'); const d = $('#dialog');
+  d.innerHTML = '<h3>' + esc(title) + '</h3>' +
+    '<div style="text-align:left;font-size:14px;line-height:1.8;color:var(--text);margin:6px 0 16px">' + html + '</div>' +
+    '<button class="btn sm" onclick="hideModal()">我知道了</button>';
+  m.classList.remove('hide');
 }
 
 /* ============ 打卡 / 进度 ============ */
