@@ -3557,12 +3557,51 @@ WORDS_DATA.forEach(w => { if (TOPICS[TOPICS.length - 1] !== w[0]) TOPICS.push(w[
 /* ============ 状态 ============ */
 const KEY = 'vnvocab3000v1';
 let S;
-function defaults() { return { v: 1, learned: {}, fav: [], days: {}, set: { perDay: 50, rate: 1, auto: true, dark: false } }; }
+function defaults() { return { v: 1, learned: {}, fav: [], hidden: [], days: {}, set: { perDay: 50, rate: 1, auto: true, dark: false } }; }
 function load() {
-  try { const s = JSON.parse(localStorage.getItem(KEY)); if (s && s.v === 1) return s; } catch (e) {}
+  try { const s = JSON.parse(localStorage.getItem(KEY)); if (s && s.v === 1) { if (!Array.isArray(s.hidden)) s.hidden = []; return s; } } catch (e) {}
   const s = defaults(); localStorage.setItem(KEY, JSON.stringify(s)); return s;
 }
 function save() { localStorage.setItem(KEY, JSON.stringify(S)); }
+
+/* ============ 隐藏词（自定义词库） ============ */
+const HIDDEN_TIP = '已隐藏的单词不会出现在学习、测验、生词本和词表中，可在词表页底部「已隐藏」中恢复';
+function isHidden(id) { return S.hidden.includes(WORDS_DATA[id][1]); }
+function visCount() { return WORDS_DATA.length - S.hidden.length; }
+function visIds() { const out = []; WORDS_DATA.forEach((w, i) => { if (!S.hidden.includes(w[1])) out.push(i); }); return out; }
+function hideWordNow(id) {
+  const v = WORDS_DATA[id][1];
+  if (!S.hidden.includes(v)) S.hidden.push(v);
+  S.fav = S.fav.filter(f => f !== id);
+  save(); hideModal(); switchTab(TAB); toast('已隐藏：' + v);
+}
+function hideWord(id) {
+  const v = WORDS_DATA[id][1];
+  confirmBox('隐藏单词', '“' + v + '”将不再背诵。' + HIDDEN_TIP + '。', '隐藏', 'function(){ hideWordNow(' + id + '); }');
+}
+function restoreWord(id) {
+  const v = WORDS_DATA[id][1];
+  S.hidden = S.hidden.filter(x => x !== v);
+  save(); renderHidden(); toast('已恢复：' + v);
+}
+function renderHidden() {
+  $('#topbar').innerHTML = '<div class="topbar-row"><button class="btn-back" onclick="renderWords()">‹</button><h1 style="font-size:17px">已隐藏词汇</h1></div>';
+  const list = S.hidden.slice().reverse();
+  $('#main').innerHTML =
+    (list.length === 0 ? '<div class="empty"><span class="e">🙈</span>没有已隐藏的单词</div>' :
+      list.map(v => {
+        const i = WORDS_DATA.findIndex(w => w[1] === v);
+        if (i < 0) return '';
+        const w = WORDS_DATA[i];
+        return '<div class="row" onclick="wordModal(' + i + ')">' +
+          '<span class="emoji">' + emojiFor(w[0]) + '</span>' +
+          '<div style="flex:1"><div class="v">' + esc(w[1]) + '</div><div class="m">' + esc(w[2]) + '</div></div>' +
+          '<button class="icon-btn" onclick="event.stopPropagation();speak(\'' + esc(w[1]).replace(/'/g, "\\'") + '\')">🔊</button>' +
+          '<button class="icon-btn on" onclick="event.stopPropagation();restoreWord(' + i + ')">↩︎</button>' +
+        '</div>';
+      }).join('')) +
+    '<div class="foot-note">' + HIDDEN_TIP + '</div>';
+}
 S = load();
 if (![50, 100, 200, 300, 500].includes(S.set.perDay)) { S.set.perDay = 50; save(); }
 if (S.set.dark) document.body.classList.add('dark');
@@ -3595,9 +3634,9 @@ function streak() {
   while (S.days[keyOf(d)]) { c++; d.setDate(d.getDate() - 1); }
   return c;
 }
-function learnedCount() { return Object.keys(S.learned).length; }
-function masterCount() { return Object.values(S.learned).filter(l => l.b >= 5).length; }
-function dueReviewIds() { const now = Date.now(); return Object.keys(S.learned).map(Number).filter(id => S.learned[id].due <= now); }
+function learnedCount() { return Object.keys(S.learned).filter(id => !isHidden(+id)).length; }
+function masterCount() { return Object.keys(S.learned).filter(id => !isHidden(+id) && S.learned[id].b >= 5).length; }
+function dueReviewIds() { const now = Date.now(); return Object.keys(S.learned).map(Number).filter(id => S.learned[id].due <= now && !isHidden(id)); }
 function interval(b) { return [0, DAY, 2 * DAY, 4 * DAY, 7 * DAY, 15 * DAY][Math.min(b, 5)]; }
 function updateSRS(id, know) {
   if (!S.learned[id]) S.learned[id] = { b: 0, due: 0, r: 0, w: 0 };
@@ -3609,7 +3648,7 @@ function updateSRS(id, know) {
 }
 function newWordIds(limit) {
   const pool = [];
-  WORDS_DATA.forEach((w, i) => { if (!S.learned[i]) pool.push(i); });
+  WORDS_DATA.forEach((w, i) => { if (!S.learned[i] && !S.hidden.includes(w[1])) pool.push(i); });
   shuffle(pool);
   return pool.slice(0, limit);
 }
@@ -3647,6 +3686,7 @@ function wordModal(id) {
     '<p style="margin-bottom:14px">' + esc(shortTopic(w[0])) + ' · ' + status + '</p>' +
     '<button class="btn sm" onclick="speak(\'' + esc(w[1]).replace(/'/g, "\\'") + '\')">🔊 播放发音</button>' +
     '<button class="btn ghost sm" style="margin-top:10px" onclick="toggleFav(' + id + ');wordModal(' + id + ')">' + (fav ? '⭐ 已收藏（点击取消）' : '☆ 加入生词本') + '</button>' +
+    (S.hidden.includes(w[1]) ? '<button class="btn gray sm" style="margin-top:10px" onclick="restoreWord(' + id + ')">↩︎ 恢复背诵</button>' : '<button class="btn gray sm" style="margin-top:10px;color:var(--bad)" onclick="hideWord(' + id + ')">🙈 不再背诵</button>') +
     '<button class="btn gray sm" style="margin-top:10px" onclick="hideModal()">关闭</button>';
   m.classList.remove('hide');
 }
@@ -3831,9 +3871,9 @@ function pickScope(b) { $$('#segScope button').forEach(x => x.classList.remove('
 function pickCount(b) { $$('#segCount button').forEach(x => x.classList.remove('on')); b.classList.add('on'); TEST.count = +b.dataset.c; }
 function buildTest() {
   let pool;
-  if (TEST.scope === 'fav') pool = S.fav.slice();
-  else if (TEST.scope === 'all') pool = WORDS_DATA.map((w, i) => i);
-  else pool = Object.keys(S.learned).map(Number);
+  if (TEST.scope === 'fav') pool = S.fav.filter(id => !isHidden(id));
+  else if (TEST.scope === 'all') pool = visIds();
+  else pool = Object.keys(S.learned).map(Number).filter(id => !isHidden(id));
   if (pool.length === 0) { toast('该范围还没有词'); return; }
   shuffle(pool);
   pool = pool.slice(0, TEST.count);
@@ -3845,7 +3885,7 @@ function distractors(id, n) {
   const w = WORDS_DATA[id];
   const used = new Set([w[2]]);
   const pool = [];
-  WORDS_DATA.forEach((x, i) => { if (i !== id && x[2] !== w[2]) pool.push(i); });
+  WORDS_DATA.forEach((x, i) => { if (i !== id && x[2] !== w[2] && !S.hidden.includes(x[1])) pool.push(i); });
   shuffle(pool);
   const out = [];
   for (const i of pool) { if (out.length >= n) break; if (WORDS_DATA[i][0] === w[0] && !used.has(WORDS_DATA[i][2])) { out.push(i); used.add(WORDS_DATA[i][2]); } }
@@ -3941,7 +3981,7 @@ function retryWrong() {
 /* ============ 生词本 ============ */
 function renderFav() {
   $('#topbar').innerHTML = '<h1>📕 生词本</h1><div class="sub">不认识的重点复习</div>';
-  const list = S.fav.slice().reverse();
+  const list = S.fav.filter(id => !isHidden(id)).slice().reverse();
   $('#main').innerHTML =
     (list.length ? '<div style="display:flex;gap:10px;margin-bottom:12px">' +
       '<button class="btn soft sm" onclick="quickTest(\'zh\')" style="margin:0">📝 自测生词</button>' +
@@ -3962,7 +4002,7 @@ function favRow(id) {
 }
 function masterWord(id) { if (!S.learned[id]) S.learned[id] = { b: 0, due: 0, r: 0, w: 0 }; S.learned[id].b = 6; S.learned[id].due = Date.now() + interval(6); save(); toast('标记为已掌握'); renderFav(); }
 function flashFav() {
-  const ids = shuffle(S.fav.slice());
+  const ids = shuffle(S.fav.filter(id => !isHidden(id)));
   if (!ids.length) { toast('生词本是空的'); return; }
   Sess = { ids, freshSet: new Set(), i: 0, right: 0, wrong: [], newList: [], startNew: learnedCount() };
   renderStudy();
@@ -3971,18 +4011,19 @@ function flashFav() {
 /* ============ 词表 ============ */
 let WORD_FILTER = { topic: null, q: '' };
 function renderWords() {
-  $('#topbar').innerHTML = '<h1>📚 全部词表</h1><div class="sub">' + WORDS_DATA.length + ' 词 · ' + TOPICS.length + ' 类</div>';
+  $('#topbar').innerHTML = '<h1>📚 全部词表</h1><div class="sub">' + visCount() + ' 词 · ' + TOPICS.length + ' 类</div>';
   let html = TOPICS.map((t, i) => {
-    const n = WORDS_DATA.filter(w => w[0] === t).length;
-    const l = WORDS_DATA.reduce((c, w, idx) => c + (w[0] === t && S.learned[idx] ? 1 : 0), 0);
+    const n = WORDS_DATA.filter(w => w[0] === t && !S.hidden.includes(w[1])).length;
+    const l = WORDS_DATA.reduce((c, w, idx) => c + (w[0] === t && !S.hidden.includes(w[1]) && S.learned[idx] ? 1 : 0), 0);
     return '<div class="topic-row" onclick="openTopic(' + i + ')"><span class="emoji">' + emojiFor(t) + '</span>' +
       '<div class="nm">' + esc(shortTopic(t)) + '</div>' +
       '<div class="cnt">' + l + ' / ' + n + '</div>' +
       '<span style="color:var(--sub)">›</span></div>';
   }).join('');
   html += '<div class="topic-row" onclick="openTopic(-1)" style="background:var(--grad);color:#fff;border-radius:14px;padding:14px;margin-top:10px;box-shadow:0 6px 14px rgba(232,69,44,.25)">' +
-    '<span class="emoji">🗂️</span><div class="nm">全部词汇（含搜索）</div><div class="cnt" style="color:rgba(255,255,255,.8)">' + WORDS_DATA.length + '</div><span>›</span></div>';
-  $('#main').innerHTML = html + '<div class="foot-note">点击分类进入单词列表 · 星标加入生词本</div>';
+    '<span class="emoji">🗂️</span><div class="nm">全部词汇（含搜索）</div><div class="cnt" style="color:rgba(255,255,255,.8)">' + visCount() + '</div><span>›</span></div>';
+  html += '<div class="topic-row" onclick="renderHidden()"><span class="emoji">🙈</span><div class="nm">已隐藏词汇（自定义词库）</div><div class="cnt">' + S.hidden.length + '</div><span>›</span></div>';
+  $('#main').innerHTML = html + '<div class="foot-note">点击分类进入单词列表 · 星标加入生词本 · 隐藏单词可自定义词库</div>';
 }
 function openTopic(i) {
   WORD_FILTER = { topic: i, q: '' };
@@ -3993,6 +4034,7 @@ function renderWordList() {
   const q = (WORD_FILTER.q || '').toLowerCase();
   let ids = [];
   WORDS_DATA.forEach((w, i) => {
+    if (S.hidden.includes(w[1])) return;
     if (WORD_FILTER.topic >= 0 && w[0] !== TOPICS[WORD_FILTER.topic]) return;
     if (q && !w[1].toLowerCase().includes(q) && !w[2].toLowerCase().includes(q)) return;
     ids.push(i);
@@ -4018,7 +4060,7 @@ function renderWordList() {
 /* ============ 我的 ============ */
 function renderMe() {
   $('#topbar').innerHTML = '<h1>👤 我的</h1><div class="sub">统计 · 设置 · 数据</div>';
-  const total = WORDS_DATA.length;
+  const total = visCount();
   const lc = learnedCount();
   const mc = masterCount();
   const days30 = heatmap();
@@ -4051,7 +4093,7 @@ function renderMe() {
       '<button class="btn sm" style="width:auto;padding:8px 16px;background:var(--bad)" onclick="resetData()">清空</button></div>' +
     '</div>' +
     '<input type="file" id="imp" accept="application/json" style="display:none" onchange="importData(this)">' +
-    '<div class="foot-note">数据版本 2026-08-11c<br>' + total + ' 词 · ' + TOPICS.length + ' 类 · PWA 离线 App</div>';
+    '<div class="foot-note">数据版本 2026-08-15d<br>' + total + ' 词 · ' + TOPICS.length + ' 类 · PWA 离线 App</div>';
 }
 function heatmap() {
   let html = '';
