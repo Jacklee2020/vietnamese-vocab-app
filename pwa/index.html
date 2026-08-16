@@ -4170,7 +4170,19 @@ function resetData() {
 }
 
 /* ============ 启动 ============ */
+function isWeChatIOS() {
+  const ua = navigator.userAgent || '';
+  return /MicroMessenger/i.test(ua) && /iP(hone|ad|od)/i.test(ua);
+}
+function maybeWxGuide() {
+  if (!isWeChatIOS()) return;
+  guideBox('建议在 Safari 中打开',
+    '微信内置浏览器对「添加到主屏幕 / 离线使用」支持不完整，可能无法正常显示。<br><br>' +
+    '① 点右上角「···」<br>② 选择「在 Safari 中打开」<br>③ 点底部「分享」→「添加到主屏幕」<br><br>' +
+    '之后从主屏幕图标进入，全屏且断网也能用。');
+}
 switchTab('home');
+maybeWxGuide();
 window.addEventListener('keydown', e => { if (e.key === 'Enter' && TEST && TEST.mode === 'type') { e.preventDefault(); checkType(); } });
 </script>
 <script>
