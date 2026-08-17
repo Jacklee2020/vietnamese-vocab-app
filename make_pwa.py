@@ -16,7 +16,7 @@ APP_NAME = "越南语千词斩"
 APP_SHORT = "越南语千词斩"
 APP_DESC = "越南语词汇学习 PWA · 3378 词 · 12 大类 · 离线可用"
 THEME_COLOR = "#4aa3df"
-CACHE_NAME = "vnvocab-v5"
+CACHE_NAME = "vnvocab-v6"
 
 def main() -> int:
     if not os.path.exists(SRC):

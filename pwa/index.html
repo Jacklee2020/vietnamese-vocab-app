@@ -4016,9 +4016,41 @@ function renderFav() {
     (list.length ? '<div style="display:flex;gap:10px;margin-bottom:12px">' +
       '<button class="btn soft sm" onclick="quickTest(\'zh\')" style="margin:0">📝 自测生词</button>' +
       '<button class="btn soft sm" onclick="flashFav()" style="margin:0">🃏 闪卡复习</button>' +
+      '<button class="btn soft sm" onclick="exportFav()" style="margin:0">🖨️ 导出打印</button>' +
     '</div>' : '') +
     (list.length === 0 ? '<div class="empty"><span class="e">📭</span>生词本是空的<br>学习时点“不认识”会自动加入</div>' :
       list.map(id => favRow(id)).join(''));
+}
+function exportFav() {
+  const ids = S.fav.filter(id => !isHidden(id));
+  if (!ids.length) { toast('生词本是空的'); return; }
+  const groups = TOPICS.map(t => ({ t, ids: ids.filter(id => WORDS_DATA[id][0] === t) })).filter(g => g.ids.length);
+  const now = new Date();
+  const dateStr = now.getFullYear() + '年' + (now.getMonth() + 1) + '月' + now.getDate() + '日';
+  let rows = ''; let n = 0;
+  groups.forEach(g => {
+    rows += '<tr class="g"><td colspan="4">' + esc(g.t) + '</td></tr>';
+    g.ids.forEach(id => {
+      n++; const w = WORDS_DATA[id];
+      rows += '<tr><td>' + n + '</td><td class="v">' + esc(w[1]) + '</td><td>' + esc(w[2]) + '</td><td>' + esc(shortTopic(w[0])) + '</td></tr>';
+    });
+  });
+  const html = '<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><title>越南语生词本 · 打印清单</title><style>' +
+    'body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;margin:24px;color:#222}' +
+    'h1{font-size:22px;margin:0 0 4px}.meta{font-size:13px;color:#666;margin:0}' +
+    '.bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}' +
+    '.btn{background:#4aa3df;color:#fff;border:none;padding:10px 20px;border-radius:8px;font-size:14px;cursor:pointer}' +
+    'table{width:100%;border-collapse:collapse;font-size:14px}th,td{border:1px solid #ccc;padding:7px 10px;text-align:left}' +
+    'th{background:#f2f7fc}.g td{background:#eef3f8;font-weight:700;font-size:13px}.v{font-weight:700}' +
+    '@media print{.btn{display:none}body{margin:8px}}' +
+    '</style></head><body>' +
+    '<div class="bar"><div><h1>越南语生词本 · 打印清单</h1><p class="meta">' + dateStr + ' · 共 ' + ids.length + ' 词 · 东兴还珠越南语培训中心</p></div>' +
+    '<button class="btn" onclick="window.print()">🖨️ 打印 / 保存 PDF</button></div>' +
+    '<table><thead><tr><th style="width:48px">#</th><th>越南语</th><th>中文</th><th style="width:110px">分类</th></tr></thead><tbody>' + rows + '</tbody></table>' +
+    '</body></html>';
+  const w = window.open('', '_blank');
+  if (!w) { toast('浏览器拦截了弹窗，请允许弹窗后重试'); return; }
+  w.document.open(); w.document.write(html); w.document.close();
 }
 function favRow(id) {
   const w = WORDS_DATA[id];
