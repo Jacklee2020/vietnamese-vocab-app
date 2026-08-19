@@ -4130,6 +4130,7 @@ function renderMe() {
   const lc = learnedCount();
   const mc = masterCount();
   const days30 = heatmap();
+  const rs = reviewStats();
   $('#main').innerHTML =
     '<div class="stat-grid" style="grid-template-columns:repeat(3,1fr)">' +
       '<div class="stat"><div class="n">' + lc + '</div><div class="l">已学 / ' + total + '</div></div>' +
@@ -4138,6 +4139,16 @@ function renderMe() {
     '</div>' +
     '<div class="section-title">近 30 天学习</div>' +
     '<div class="card" style="display:flex;flex-wrap:wrap;gap:4px">' + days30 + '</div>' +
+    '<div class="section-title">学习报告</div>' +
+    '<div class="card" style="padding:14px">' +
+      '<div class="stat-grid" style="grid-template-columns:repeat(2,1fr);margin-bottom:10px">' +
+        '<div class="stat"><div class="n">' + weekSum() + '</div><div class="l">本周学习（词）</div></div>' +
+        '<div class="stat"><div class="n">' + rs.r + '</div><div class="l">累计复习（次）</div></div>' +
+        '<div class="stat"><div class="n">' + (rs.r > 0 ? Math.round((rs.r - rs.w) / rs.r * 100) + '%' : '—') + '</div><div class="l">整体正确率</div></div>' +
+        '<div class="stat"><div class="n">' + Object.keys(S.days).length + '</div><div class="l">累计学习（天）</div></div>' +
+      '</div>' +
+      '<div class="foot-note" style="margin:0">正确率按「认识次数 ÷ 复习总数」估算，复习越多越接近真实水平。</div>' +
+    '</div>' +
     '<div class="section-title">设置</div>' +
     '<div class="card" style="padding:6px 14px">' +
       '<div class="set-row"><div><div class="l">每日新词数</div><div class="d">当前 ' + S.set.perDay + ' 个</div></div>' +
@@ -4171,6 +4182,20 @@ function heatmap() {
     html += '<div style="width:18px;height:18px;border-radius:5px;background:' + lv + '" title="' + keyOf(d) + ' ' + c + '词"></div>';
   }
   return html;
+}
+function weekSum() {
+  let s = 0; const now = new Date();
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(now); d.setDate(d.getDate() - i);
+    const k = keyOf(d);
+    if (S.days[k]) s += S.days[k].n + S.days[k].r;
+  }
+  return s;
+}
+function reviewStats() {
+  let r = 0, w = 0;
+  Object.values(S.learned).forEach(L => { r += L.r || 0; w += L.w || 0; });
+  return { r, w };
 }
 function setPerDay(n) { S.set.perDay = n; save(); renderMe(); toast('每日新词改为 ' + n); }
 function setRate(r) { S.set.rate = r; save(); renderMe(); }
