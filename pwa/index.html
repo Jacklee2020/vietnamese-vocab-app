@@ -3666,13 +3666,26 @@ function streak() {
 }
 function learnedCount() { return Object.keys(S.learned).filter(id => !isHidden(+id)).length; }
 function masterCount() { return Object.keys(S.learned).filter(id => !isHidden(+id) && S.learned[id].b >= 5).length; }
-function dueReviewIds() { const now = Date.now(); return Object.keys(S.learned).map(Number).filter(id => S.learned[id].due <= now && !isHidden(id)); }
+function dueReviewIds() {
+  const now = Date.now();
+  const ids = Object.keys(S.learned).map(Number).filter(id => S.learned[id].due <= now && !isHidden(id));
+  const groups = {};
+  ids.forEach(id => {
+    const L = S.learned[id];
+    const w = (L.w || 0) * 2 + (5 - Math.min(L.b || 0, 5));
+    (groups[w] = groups[w] || []).push(id);
+  });
+  const out = [];
+  Object.keys(groups).map(Number).sort((a, b) => b - a)
+    .forEach(w => { shuffle(groups[w]); out.push(...groups[w]); });
+  return out;
+}
 function interval(b) { return [0, DAY, 2 * DAY, 4 * DAY, 7 * DAY, 15 * DAY][Math.min(b, 5)]; }
 function updateSRS(id, know) {
   if (!S.learned[id]) S.learned[id] = { b: 0, due: 0, r: 0, w: 0 };
   const L = S.learned[id];
   if (know) { L.b = Math.min(L.b + 1, 6); L.due = Date.now() + interval(L.b); }
-  else { L.b = Math.max(L.b - 1, 0); L.due = Date.now() + DAY; }
+  else { L.b = Math.max(L.b - 1, 0); L.due = Date.now() + 4 * 3600 * 1000; }
   L.r++; if (!know) L.w++;
   save();
 }
@@ -3683,7 +3696,7 @@ function newWordIds(limit) {
   return pool.slice(0, limit);
 }
 function dailyQueue() {
-  const review = shuffle(dueReviewIds()).slice(0, 100);
+  const review = dueReviewIds().slice(0, 100);
   const fresh = newWordIds(S.set.perDay);
   return { ids: [...review, ...fresh], freshSet: new Set(fresh) };
 }
