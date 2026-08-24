@@ -7,10 +7,16 @@ let pass = 0, fail = 0;
 const check = (n, c, x) => { results.push(`${c ? 'PASS' : 'FAIL'} | ${n}${x ? ' | ' + x : ''}`); c ? pass++ : fail++; };
 
 (async () => {
-  const browser = await chromium.launch({
-    executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
-    headless: true, args: ['--no-sandbox', '--disable-gpu', '--disable-dev-shm-usage', '--no-first-run']
-  });
+  const fs = require('fs');
+  const macChrome = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
+  const launchOptions = {
+    headless: true,
+    args: ['--no-sandbox', '--disable-gpu', '--disable-dev-shm-usage', '--no-first-run']
+  };
+  if (fs.existsSync(macChrome)) {
+    launchOptions.executablePath = macChrome;
+  }
+  const browser = await chromium.launch(launchOptions);
   const ctx = await browser.newContext({ viewport: { width: 390, height: 844 } });
   const page = await ctx.newPage();
   page.on('pageerror', e => errors.push('PAGEERROR: ' + e.message));

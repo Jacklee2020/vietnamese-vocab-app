@@ -14,11 +14,15 @@ function check(name, cond, extra = '') {
 }
 
 (async () => {
-  const browser = await chromium.launch({
-    executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+  const macChrome = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
+  const launchOptions = {
     headless: true,
     args: ['--no-sandbox', '--disable-gpu', '--disable-dev-shm-usage', '--no-first-run', '--disable-background-networking']
-  });
+  };
+  if (fs.existsSync(macChrome)) {
+    launchOptions.executablePath = macChrome;
+  }
+  const browser = await chromium.launch(launchOptions);
 
   const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
   page.on('console', m => { if (m.type() === 'error') consoleErrors.push(m.text()); });

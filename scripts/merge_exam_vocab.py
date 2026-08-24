@@ -20,10 +20,24 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 APP_DIR = os.path.abspath(os.path.join(HERE, '..'))
 ROOT_DIR = os.path.abspath(os.path.join(APP_DIR, '..'))
 
-SRC_EXAM_CSV = os.path.join(ROOT_DIR, '越南语等级考试模拟-词表', 'A1-B2_新增词表_app未收录.csv')
 APP_CSV = os.path.join(APP_DIR, '词库_合并版.csv')
 APP_XLSX = os.path.join(APP_DIR, '词库_合并版.xlsx')
 OUT_NEW_CSV = os.path.join(APP_DIR, '新增清单_A1B2.csv')
+
+
+def find_exam_csv():
+    """解析待清洗源词表路径，支持命令行参数与多级目录回退。"""
+    if len(sys.argv) > 1 and os.path.exists(sys.argv[1]):
+        return os.path.abspath(sys.argv[1])
+    candidates = [
+        os.path.join(ROOT_DIR, '越南语等级考试模拟-词表', 'A1-B2_新增词表_app未收录.csv'),
+        os.path.join(APP_DIR, 'A1-B2_新增词表_app未收录.csv'),
+        os.path.join(APP_DIR, 'scripts', 'A1-B2_新增词表_app未收录.csv'),
+    ]
+    for p in candidates:
+        if os.path.exists(p):
+            return p
+    return None
 
 # 12 大主题标准名称
 C1  = '一、数字、量词与度量衡'
@@ -231,11 +245,15 @@ def main():
     print(f"📖 现有词库读取完毕：{len(existing_rows)} 词")
 
     # 2. 读取并清洗考试未收录词表
-    if not os.path.exists(SRC_EXAM_CSV):
-        print(f"❌ 未找到考试词表：{SRC_EXAM_CSV}")
+    src_exam_csv = find_exam_csv()
+    if not src_exam_csv or not os.path.exists(src_exam_csv):
+        print("❌ 未找到考试源词表文件（A1-B2_新增词表_app未收录.csv）。")
+        print("   用法：python3 scripts/merge_exam_vocab.py <源词表路径>")
+        print("   或者将源文件放置在「越南语等级考试模拟-词表/」或仓库根目录。")
         return 1
 
-    with open(SRC_EXAM_CSV, encoding='utf-8-sig') as f:
+    print(f"📄 读取待清洗考试源词表：{src_exam_csv}")
+    with open(src_exam_csv, encoding='utf-8-sig') as f:
         raw_rows = list(csv.reader(f))[1:]
 
     cleaned_new_entries = []
@@ -287,13 +305,16 @@ def main():
 
     print(f"✨ 考试词表清洗完成：有效新增 {len(cleaned_new_entries)} 词（跳过/去重 {skipped_count} 条）")
 
-    # 3. 写入新增清单 CSV
-    with open(OUT_NEW_CSV, 'w', encoding='utf-8-sig', newline='') as f:
-        writer = csv.writer(f)
-        writer.writerow(['序号', '分类', '越南语', '中文', '级别', '词性'])
-        for i, item in enumerate(cleaned_new_entries, 1):
-            writer.writerow([i, item['category'], item['vi'], item['zh'], item['level'], item['pos']])
-    print(f"📄 新增清单已导出：{OUT_NEW_CSV}")
+    # 3. 写入新增清单 CSV（若有新增）
+    if cleaned_new_entries:
+        with open(OUT_NEW_CSV, 'w', encoding='utf-8-sig', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow(['序号', '分类', '越南语', '中文', '级别', '词性'])
+            for i, item in enumerate(cleaned_new_entries, 1):
+                writer.writerow([i, item['category'], item['vi'], item['zh'], item['level'], item['pos']])
+        print(f"📄 新增清单已导出：{OUT_NEW_CSV}")
+    else:
+        print("ℹ️ 无新词需要增补（现有词库已包含全部条目）。")
 
     # 4. 构建合并后的全量词库
     merged_rows = []

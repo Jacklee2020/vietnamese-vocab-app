@@ -44,3 +44,20 @@ jobs:
           test -s pwa/apple-touch-icon.png
           grep -q "const WORDS" pwa/index.html
           echo "✅ PWA 资源完整"
+
+  e2e-audit:
+    name: 端到端功能与全版本特性审计
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: 安装 Playwright 与 Chromium
+        run: |
+          npm install playwright
+          npx playwright install chromium --with-deps
+      - name: 运行全版本特性审计测试 (28 项)
+        run: node audit_test.cjs
+      - name: 运行核心流程回归测试
+        run: node test_app.cjs
