@@ -121,7 +121,11 @@ function check(name, cond, extra) {
   const me = await page.textContent('body');
   check('统计面板', me.includes('已学') && me.includes('连续打卡'), '');
   const dayOpts = await page.locator('.rate-seg').first().locator('button').allTextContents();
-  check('每日新词选项 50/100/200/300/500', JSON.stringify(dayOpts) === JSON.stringify(['50','100','200','300','500']), dayOpts.join(','));
+  check('每日新词选项 10/20/50/100', JSON.stringify(dayOpts) === JSON.stringify(['10','20','50','100']), dayOpts.join(','));
+  const priColor = await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--pri').trim());
+  check('蓝色主题色调 (#4aa3df)', priColor === '#4aa3df', 'pri=' + priColor);
+  const hasHiding = await page.evaluate(() => typeof isHidden === 'function' && typeof hideWordNow === 'function' && Array.isArray(S.hidden));
+  check('词汇自定义隐藏功能', hasHiding, '');
   await page.screenshot({ path: path.join(OUT, '04_我的.png') });
 
   // 6. 深色模式

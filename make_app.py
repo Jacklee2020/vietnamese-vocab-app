@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""把 词库_合并版.csv 的词条嵌入 template.html，生成单文件离线 App。"""
+"""把 词库_合并版.csv 的词条嵌入 template.html，生成单文件 App 与 pwa/index.html。"""
 import csv
 import json
 import os
@@ -9,6 +9,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 CSV_SRC = os.path.join(HERE, '词库_合并版.csv')
 TPL_SRC = os.path.join(HERE, 'template.html')
 DST_APP = os.path.join(HERE, '越南语背单词App.html')
+DST_PWA = os.path.join(HERE, 'pwa', 'index.html')
 
 
 def main():
@@ -26,15 +27,22 @@ def main():
         tpl = f.read()
 
     payload = json.dumps(data, ensure_ascii=False).replace('</', '<\\/')
-    assert '/*__DATA__*/' in tpl, "模板中未找到 /*__DATA__*/ 占位符"
+    assert '/*__DATA*/' in tpl, "模板中未找到 /*__DATA*/ 占位符"
 
-    out = tpl.replace('/*__DATA__*/', payload)
+    out = tpl.replace('/*__DATA*/', payload)
+
+    # 写入单文件 App
     with open(DST_APP, 'w', encoding='utf-8') as f:
         f.write(out)
 
+    # 写入 PWA 版
+    os.makedirs(os.path.dirname(DST_PWA), exist_ok=True)
+    with open(DST_PWA, 'w', encoding='utf-8') as f:
+        f.write(out)
+
     print(f"✅ 词条数: {len(data)}")
-    print(f"✅ 输出: {DST_APP}")
-    print(f"✅ 大小: {os.path.getsize(DST_APP) / 1024:.1f} KB")
+    print(f"✅ 单文件版输出: {DST_APP} ({os.path.getsize(DST_APP) / 1024:.1f} KB)")
+    print(f"✅ PWA 版输出: {DST_PWA} ({os.path.getsize(DST_PWA) / 1024:.1f} KB)")
     return 0
 
 

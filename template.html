@@ -5,12 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#e8452c">
-<title>越南语千词斩 · Vietnamese Vocabulary Trainer</title>
+<link rel="icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-title" content="越南语千词斩">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#4aa3df">
+<title>越南语千词斩</title>
 <style>
 :root{
   --bg:#f3f4f6; --card:#ffffff; --text:#1c1c1e; --sub:#8e8e93;
-  --pri:#e8452c; --pri2:#f5821f; --grad:linear-gradient(135deg,#e8452c 0%,#f5821f 100%);
+  --pri:#4aa3df; --pri2:#83c4ef; --grad:linear-gradient(135deg,#4aa3df 0%,#83c4ef 100%);
   --ok:#2fb35b; --okbg:#e7f7ee; --bad:#ff3b30; --badbg:#ffe9e7;
   --gold:#ffcc00; --line:#e9eaee; --shadow:0 4px 18px rgba(0,0,0,.07); --tabh:58px;
 }
@@ -25,7 +30,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue"
 input,textarea{-webkit-user-select:text;user-select:text}
 #app{max-width:520px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;position:relative;background:var(--bg)}
 /* header */
-.top{position:sticky;top:0;z-index:30;background:var(--grad);color:#fff;padding:16px 16px 14px;border-radius:0 0 24px 24px;box-shadow:0 4px 14px rgba(232,69,44,.25)}
+.top{position:sticky;top:0;z-index:30;background:var(--grad);color:#fff;padding:16px 16px 14px;border-radius:0 0 24px 24px;box-shadow:0 4px 14px rgba(74,163,223,.25)}
 .top h1{font-size:20px;font-weight:800;letter-spacing:.5px;display:flex;align-items:center;gap:8px}
 .top .sub{font-size:12px;opacity:.85;margin-top:3px}
 .topbar-row{display:flex;align-items:center;gap:10px}
@@ -41,20 +46,20 @@ main{flex:1;padding:14px 14px calc(var(--tabh) + 24px);overflow-y:auto}
 .tab.on .ic{filter:none;opacity:1}
 /* cards & buttons */
 .card{background:var(--card);border-radius:18px;box-shadow:var(--shadow);padding:16px}
-.btn{display:block;width:100%;border:none;border-radius:14px;padding:15px;font-size:16px;font-weight:700;cursor:pointer;color:#fff;background:var(--grad);box-shadow:0 6px 16px rgba(232,69,44,.3);transition:transform .08s}
+.btn{display:block;width:100%;border:none;border-radius:14px;padding:15px;font-size:16px;font-weight:700;cursor:pointer;color:#fff;background:var(--grad);box-shadow:0 6px 16px rgba(74,163,223,.3);transition:transform .08s}
 .btn:active{transform:scale(.97)}
 .btn.ghost{background:var(--card);color:var(--pri);box-shadow:none;border:2px solid var(--pri)}
 .btn.soft{background:var(--okbg);color:var(--ok);box-shadow:none}
 .btn.gray{background:#e5e7eb;color:#4b5563;box-shadow:none}
 .btn.sm{padding:10px;font-size:14px;border-radius:12px}
 /* home */
-.hero{background:var(--grad);border-radius:20px;color:#fff;padding:18px;position:relative;overflow:hidden;box-shadow:0 8px 20px rgba(232,69,44,.3)}
+.hero{background:var(--grad);border-radius:20px;color:#fff;padding:18px;position:relative;overflow:hidden;box-shadow:0 8px 20px rgba(74,163,223,.3)}
 .hero .day{font-size:13px;opacity:.9}
 .hero .big{font-size:38px;font-weight:800;margin:6px 0 2px}
 .hero .streak{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.22);padding:5px 12px;border-radius:20px;font-size:13px;font-weight:700;margin-top:8px}
 .hero .ring-wrap{display:flex;align-items:center;gap:16px}
 .ring{width:96px;height:96px;border-radius:50%;background:conic-gradient(#fff var(--p,0%),rgba(255,255,255,.25) 0);display:flex;align-items:center;justify-content:center;flex:none;transition:--p .4s}
-.ring .inner{width:74px;height:74px;border-radius:50%;background:rgba(232,69,44,.95);display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800;font-size:20px}
+.ring .inner{width:74px;height:74px;border-radius:50%;background:rgba(74,163,223,.95);display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800;font-size:20px}
 .ring .inner small{font-size:10px;font-weight:600;opacity:.8}
 .chip{display:inline-block;background:var(--okbg);color:var(--ok);font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px}
 .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
@@ -93,7 +98,7 @@ main{flex:1;padding:14px 14px calc(var(--tabh) + 24px);overflow-y:auto}
 /* test */
 .seg{display:flex;background:var(--card);border-radius:14px;padding:4px;gap:4px;box-shadow:var(--shadow)}
 .seg button{flex:1;border:none;background:none;padding:10px 4px;border-radius:11px;font-size:13px;font-weight:700;color:var(--sub);cursor:pointer}
-.seg button.on{background:var(--grad);color:#fff;box-shadow:0 4px 10px rgba(232,69,44,.3)}
+.seg button.on{background:var(--grad);color:#fff;box-shadow:0 4px 10px rgba(74,163,223,.3)}
 .qword{font-size:34px;font-weight:800;text-align:center;margin:22px 0 6px}
 .qsub{text-align:center;color:var(--sub);font-size:13px;margin-bottom:16px}
 .opts{display:flex;flex-direction:column;gap:10px}
@@ -157,7 +162,7 @@ main{flex:1;padding:14px 14px calc(var(--tabh) + 24px);overflow-y:auto}
 <div class="toast" id="toast"></div>
 
 <script>
-const WORDS_DATA = /*__DATA__*/;
+const WORDS_DATA = /*__DATA*/;
 
 /* ============ 工具 ============ */
 const $ = s => document.querySelector(s);
@@ -168,35 +173,104 @@ const DAY = 86400000;
 const keyOf = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
 const todayKey = () => keyOf(new Date());
 const shortTopic = t => t.replace(/^[一二三四五六七八九十]+、/, '');
-const emojiFor = t => { const i = TOPICS.indexOf(t); return ['🔢','🕐','👥','🍜','🚗','🛍️','🏨','💼','💰','🏥','⭐'][i] || '📚'; };
-const TOPICS = [];
-WORDS_DATA.forEach(w => { if (TOPICS[TOPICS.length - 1] !== w[0]) TOPICS.push(w[0]); });
+const emojiFor = t => { const i = TOPICS.indexOf(t); return ['🔢','🕐','👥','🍜','🚗','🛍️','🏨','💼','💰','🏥','⭐','💬'][i] || '📚'; };
+const TOPICS = [...new Set(WORDS_DATA.map(w => w[0]))];
 
 /* ============ 状态 ============ */
 const KEY = 'vnvocab3000v1';
 let S;
-function defaults() { return { v: 1, learned: {}, fav: [], days: {}, set: { perDay: 50, rate: 1, auto: true, dark: false } }; }
+function defaults() { return { v: 1, learned: {}, fav: [], hidden: [], days: {}, set: { perDay: 10, rate: 1, auto: true, dark: false } }; }
 function load() {
-  try { const s = JSON.parse(localStorage.getItem(KEY)); if (s && s.v === 1) return s; } catch (e) {}
+  try { const s = JSON.parse(localStorage.getItem(KEY)); if (s && s.v === 1) { if (!Array.isArray(s.hidden)) s.hidden = []; return s; } } catch (e) {}
   const s = defaults(); localStorage.setItem(KEY, JSON.stringify(s)); return s;
 }
 function save() { localStorage.setItem(KEY, JSON.stringify(S)); }
+function normalize() {
+  if (!Array.isArray(S.hidden)) S.hidden = [];
+  if (![10, 20, 50, 100].includes(S.set.perDay)) S.set.perDay = S.set.perDay >= 200 ? 100 : 10;
+}
+
+/* ============ 隐藏词（自定义词库） ============ */
+const HIDDEN_TIP = '已隐藏的单词不会出现在学习、测验、生词本和词表中，可在词表页底部「已隐藏」中恢复';
+function isHidden(id) { return S.hidden.includes(WORDS_DATA[id][1]); }
+function visCount() { return WORDS_DATA.length - S.hidden.length; }
+function visIds() { const out = []; WORDS_DATA.forEach((w, i) => { if (!S.hidden.includes(w[1])) out.push(i); }); return out; }
+function hideWordNow(id) {
+  const v = WORDS_DATA[id][1];
+  if (!S.hidden.includes(v)) S.hidden.push(v);
+  S.fav = S.fav.filter(f => f !== id);
+  save(); hideModal();
+  if (TAB === 'words' && WORD_FILTER.active) renderWordList(); else switchTab(TAB);
+  toast('已隐藏：' + v);
+}
+function hideWord(id) {
+  const v = WORDS_DATA[id][1];
+  confirmBox('隐藏单词', '“' + v + '”将不再背诵。' + HIDDEN_TIP + '。', '隐藏', function () { hideWordNow(id); });
+}
+function restoreWord(id) {
+  const v = WORDS_DATA[id][1];
+  S.hidden = S.hidden.filter(x => x !== v);
+  save(); renderHidden(); toast('已恢复：' + v);
+}
+function renderHidden() {
+  $('#topbar').innerHTML = '<div class="topbar-row"><button class="btn-back" onclick="renderWords()">‹</button><h1 style="font-size:17px">已隐藏词汇</h1></div>';
+  const list = S.hidden.slice().reverse();
+  $('#main').innerHTML =
+    (list.length === 0 ? '<div class="empty"><span class="e">🙈</span>没有已隐藏的单词</div>' :
+      list.map(v => {
+        const i = WORDS_DATA.findIndex(w => w[1] === v);
+        if (i < 0) return '';
+        const w = WORDS_DATA[i];
+        return '<div class="row" onclick="wordModal(' + i + ')">' +
+          '<span class="emoji">' + emojiFor(w[0]) + '</span>' +
+          '<div style="flex:1"><div class="v">' + esc(w[1]) + '</div><div class="m">' + esc(w[2]) + '</div></div>' +
+          '<button class="icon-btn" onclick="event.stopPropagation();speak(\'' + esc(w[1]).replace(/'/g, "\\'") + '\')">🔊</button>' +
+          '<button class="icon-btn on" onclick="event.stopPropagation();restoreWord(' + i + ')">↩︎</button>' +
+        '</div>';
+      }).join('')) +
+    '<div class="foot-note">' + HIDDEN_TIP + '</div>';
+}
 S = load();
-if (![50, 100, 200, 300, 500].includes(S.set.perDay)) { S.set.perDay = 50; save(); }
+normalize(); save();
 if (S.set.dark) document.body.classList.add('dark');
 
 /* ============ 发音 ============ */
 let VOICE = null;
+let _ttsTipShown = false;
 function pickVoice() { try { const vs = speechSynthesis.getVoices(); VOICE = vs.find(v => v.lang && v.lang.toLowerCase().startsWith('vi')) || VOICE; } catch (e) {} }
 try { speechSynthesis.onvoiceschanged = pickVoice; pickVoice(); } catch (e) {}
+function viVoiceAvailable() {
+  try {
+    const vs = speechSynthesis.getVoices();
+    if (!vs || !vs.length) return true;
+    return vs.some(v => v.lang && v.lang.toLowerCase().startsWith('vi'));
+  } catch (e) { return true; }
+}
 function speak(text) {
   if (!('speechSynthesis' in window)) { toast('当前设备不支持语音'); return; }
+  if (!_ttsTipShown && !viVoiceAvailable()) {
+    _ttsTipShown = true;
+    const ios = /iP(hone|ad|od)/.test(navigator.userAgent || '');
+    guideBox('未检测到越南语语音',
+      '当前设备可能未安装越南语语音包，发音会无声或不准。<br>请按以下步骤下载：<br><br>' +
+      (ios
+        ? '① 打开「设置」→「辅助功能」<br>② 「朗读内容」→「声音」<br>③ 下载「越南语（Tiếng Việt）」语音'
+        : '① 打开「设置」→「系统」<br>② 「语言与输入法」→「文字转语音」（TTS）<br>③ 下载越南语语音数据') +
+      '<br><br>下载完成后返回本页，点「🔊」即可发音。');
+  }
   try {
     speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
     u.lang = 'vi-VN'; if (VOICE) u.voice = VOICE; u.rate = S.set.rate;
     speechSynthesis.speak(u);
   } catch (e) { toast('语音播放失败'); }
+}
+function guideBox(title, html) {
+  const m = $('#mask'); const d = $('#dialog');
+  d.innerHTML = '<h3>' + esc(title) + '</h3>' +
+    '<div style="text-align:left;font-size:14px;line-height:1.8;color:var(--text);margin:6px 0 16px">' + html + '</div>' +
+    '<button class="btn sm" onclick="hideModal()">我知道了</button>';
+  m.classList.remove('hide');
 }
 
 /* ============ 打卡 / 进度 ============ */
@@ -213,26 +287,39 @@ function streak() {
   while (S.days[keyOf(d)]) { c++; d.setDate(d.getDate() - 1); }
   return c;
 }
-function learnedCount() { return Object.keys(S.learned).length; }
-function masterCount() { return Object.values(S.learned).filter(l => l.b >= 5).length; }
-function dueReviewIds() { const now = Date.now(); return Object.keys(S.learned).map(Number).filter(id => S.learned[id].due <= now); }
+function learnedCount() { return Object.keys(S.learned).filter(id => !isHidden(+id)).length; }
+function masterCount() { return Object.keys(S.learned).filter(id => !isHidden(+id) && S.learned[id].b >= 5).length; }
+function dueReviewIds() {
+  const now = Date.now();
+  const ids = Object.keys(S.learned).map(Number).filter(id => S.learned[id].due <= now && !isHidden(id));
+  const groups = {};
+  ids.forEach(id => {
+    const L = S.learned[id];
+    const w = (L.w || 0) * 2 + (5 - Math.min(L.b || 0, 5));
+    (groups[w] = groups[w] || []).push(id);
+  });
+  const out = [];
+  Object.keys(groups).map(Number).sort((a, b) => b - a)
+    .forEach(w => { shuffle(groups[w]); out.push(...groups[w]); });
+  return out;
+}
 function interval(b) { return [0, DAY, 2 * DAY, 4 * DAY, 7 * DAY, 15 * DAY][Math.min(b, 5)]; }
 function updateSRS(id, know) {
   if (!S.learned[id]) S.learned[id] = { b: 0, due: 0, r: 0, w: 0 };
   const L = S.learned[id];
   if (know) { L.b = Math.min(L.b + 1, 6); L.due = Date.now() + interval(L.b); }
-  else { L.b = Math.max(L.b - 1, 0); L.due = Date.now() + DAY; }
+  else { L.b = Math.max(L.b - 1, 0); L.due = Date.now() + 4 * 3600 * 1000; }
   L.r++; if (!know) L.w++;
   save();
 }
 function newWordIds(limit) {
   const pool = [];
-  WORDS_DATA.forEach((w, i) => { if (!S.learned[i]) pool.push(i); });
+  WORDS_DATA.forEach((w, i) => { if (!S.learned[i] && !S.hidden.includes(w[1])) pool.push(i); });
   shuffle(pool);
   return pool.slice(0, limit);
 }
 function dailyQueue() {
-  const review = shuffle(dueReviewIds()).slice(0, 100);
+  const review = dueReviewIds().slice(0, 100);
   const fresh = newWordIds(S.set.perDay);
   return { ids: [...review, ...fresh], freshSet: new Set(fresh) };
 }
@@ -243,12 +330,15 @@ function toast(msg) {
   const t = $('#toast'); t.textContent = msg; t.classList.add('show');
   clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('show'), 1800);
 }
+let _confirmCb = null;
 function confirmBox(title, text, okLabel, cb) {
+  _confirmCb = typeof cb === 'function' ? cb : null;
   const m = $('#mask'); const d = $('#dialog');
   d.innerHTML = '<h3>' + esc(title) + '</h3><p>' + esc(text) + '</p>' +
     '<button class="btn gray sm" onclick="hideModal()">取消</button>' +
-    '<button class="btn sm" onclick="hideModal();(' + cb + ')()">' + esc(okLabel) + '</button>';
+    '<button class="btn sm" id="confirm-ok">' + esc(okLabel) + '</button>';
   m.classList.remove('hide');
+  $('#confirm-ok').onclick = function () { hideModal(); if (_confirmCb) _confirmCb(); };
 }
 function hideModal() { $('#mask').classList.add('hide'); }
 function wordModal(id) {
@@ -262,6 +352,7 @@ function wordModal(id) {
     '<p style="margin-bottom:14px">' + esc(shortTopic(w[0])) + ' · ' + status + '</p>' +
     '<button class="btn sm" onclick="speak(\'' + esc(w[1]).replace(/'/g, "\\'") + '\')">🔊 播放发音</button>' +
     '<button class="btn ghost sm" style="margin-top:10px" onclick="toggleFav(' + id + ');wordModal(' + id + ')">' + (fav ? '⭐ 已收藏（点击取消）' : '☆ 加入生词本') + '</button>' +
+    (S.hidden.includes(w[1]) ? '<button class="btn gray sm" style="margin-top:10px" onclick="restoreWord(' + id + ')">↩︎ 恢复背诵</button>' : '<button class="btn gray sm" style="margin-top:10px;color:var(--bad)" onclick="hideWord(' + id + ')">🙈 不再背诵</button>') +
     '<button class="btn gray sm" style="margin-top:10px" onclick="hideModal()">关闭</button>';
   m.classList.remove('hide');
 }
@@ -285,7 +376,7 @@ function switchTab(name) {
 
 /* ============ 首页 ============ */
 function renderHome() {
-  $('#topbar').innerHTML = '<h1>🇻🇳 越南语千词斩</h1><div class="sub">核心词汇 ' + WORDS_DATA.length + ' · A1-B2 考试词库增强版</div>';
+  $('#topbar').innerHTML = '<h1>🇻🇳 越南语千词斩</h1>';
   const due = dueReviewIds().length;
   const fresh = newWordIds(S.set.perDay).length;
   const today = S.days[todayKey()];
@@ -325,7 +416,7 @@ function renderHome() {
       '<button class="btn soft sm" onclick="quickTest(\'zh\')">✍️ 四选一</button>' +
       '<button class="btn soft sm" onclick="quickTest(\'type\')">⌨️ 拼写</button>' +
     '</div>' +
-    '<div class="foot-note">2963 词 · 11 类 · 数据内嵌，断网可用<br>点单词卡片可听越南语发音</div>';
+    '<div class="foot-note">点单词卡片可听越南语发音</div>';
 }
 function weekBars() {
   const days = ['日', '一', '二', '三', '四', '五', '六'];
@@ -446,9 +537,9 @@ function pickScope(b) { $$('#segScope button').forEach(x => x.classList.remove('
 function pickCount(b) { $$('#segCount button').forEach(x => x.classList.remove('on')); b.classList.add('on'); TEST.count = +b.dataset.c; }
 function buildTest() {
   let pool;
-  if (TEST.scope === 'fav') pool = S.fav.slice();
-  else if (TEST.scope === 'all') pool = WORDS_DATA.map((w, i) => i);
-  else pool = Object.keys(S.learned).map(Number);
+  if (TEST.scope === 'fav') pool = S.fav.filter(id => !isHidden(id));
+  else if (TEST.scope === 'all') pool = visIds();
+  else pool = Object.keys(S.learned).map(Number).filter(id => !isHidden(id));
   if (pool.length === 0) { toast('该范围还没有词'); return; }
   shuffle(pool);
   pool = pool.slice(0, TEST.count);
@@ -458,12 +549,14 @@ function buildTest() {
 }
 function distractors(id, n) {
   const w = WORDS_DATA[id];
-  let same = [];
-  WORDS_DATA.forEach((x, i) => { if (i !== id && x[0] === w[0] && x[2] !== w[2]) same.push(i); });
-  let pool = same;
-  if (pool.length < n) pool = WORDS_DATA.map((x, i) => i).filter(i => i !== id && WORDS_DATA[i][2] !== w[2]);
+  const used = new Set([w[2]]);
+  const pool = [];
+  WORDS_DATA.forEach((x, i) => { if (i !== id && x[2] !== w[2] && !S.hidden.includes(x[1])) pool.push(i); });
   shuffle(pool);
-  return pool.slice(0, n);
+  const out = [];
+  for (const i of pool) { if (out.length >= n) break; if (WORDS_DATA[i][0] === w[0] && !used.has(WORDS_DATA[i][2])) { out.push(i); used.add(WORDS_DATA[i][2]); } }
+  for (const i of pool) { if (out.length >= n) break; if (!used.has(WORDS_DATA[i][2])) { out.push(i); used.add(WORDS_DATA[i][2]); } }
+  return out;
 }
 function renderTestQ() {
   $('#topbar').innerHTML = '<div class="topbar-row"><button class="btn-back" onclick="renderTestConfig()">✕</button><h1 style="font-size:17px">' + modeName(TEST.mode) + '</h1></div>';
@@ -471,13 +564,13 @@ function renderTestQ() {
   const pct = TEST.i / TEST.qs.length * 100;
   let body;
   if (TEST.mode === 'zh') {
-    const opts = shuffle([...q.dists, w[2]].map((z, idx) => ({ z, idx })));
+    const opts = shuffle([...q.dists.map(d => WORDS_DATA[d][2]), w[2]].map((z, idx) => ({ z, idx })));
     body = '<div class="qword">' + esc(w[1]) + '</div>' +
       '<div class="qsub">选择正确的中文意思</div>' +
       '<button class="icon-btn" style="margin:0 auto 10px;display:flex" onclick="speak(\'' + esc(w[1]).replace(/'/g, "\\'") + '\')">🔊</button>' +
       '<div class="opts">' + opts.map(o => '<button class="opt" data-z="' + esc(o.z) + '" onclick="checkOpt(this, \'' + esc(o.z).replace(/'/g, "\\'") + '\')">' + esc(o.z) + '</button>').join('') + '</div>';
   } else if (TEST.mode === 'listen') {
-    const opts = shuffle([...q.dists, w[2]].map((z, idx) => ({ z, idx })));
+    const opts = shuffle([...q.dists.map(d => WORDS_DATA[d][2]), w[2]].map((z, idx) => ({ z, idx })));
     body = '<div style="text-align:center;margin:20px 0 6px"><button class="speak" style="font-size:34px;width:80px;height:80px;border-radius:50%;background:var(--grad);color:#fff;border:none;cursor:pointer" onclick="speak(\'' + esc(w[1]).replace(/'/g, "\\'") + '\')">🔊</button></div>' +
       '<div class="qsub">听发音，选择正确意思</div>' +
       '<div class="opts">' + opts.map(o => '<button class="opt" onclick="checkOpt(this, \'' + esc(o.z).replace(/'/g, "\\'") + '\')">' + esc(o.z) + '</button>').join('') + '</div>';
@@ -554,14 +647,46 @@ function retryWrong() {
 /* ============ 生词本 ============ */
 function renderFav() {
   $('#topbar').innerHTML = '<h1>📕 生词本</h1><div class="sub">不认识的重点复习</div>';
-  const list = S.fav.slice().reverse();
+  const list = S.fav.filter(id => !isHidden(id)).slice().reverse();
   $('#main').innerHTML =
     (list.length ? '<div style="display:flex;gap:10px;margin-bottom:12px">' +
       '<button class="btn soft sm" onclick="quickTest(\'zh\')" style="margin:0">📝 自测生词</button>' +
       '<button class="btn soft sm" onclick="flashFav()" style="margin:0">🃏 闪卡复习</button>' +
+      '<button class="btn soft sm" onclick="exportFav()" style="margin:0">🖨️ 导出打印</button>' +
     '</div>' : '') +
     (list.length === 0 ? '<div class="empty"><span class="e">📭</span>生词本是空的<br>学习时点“不认识”会自动加入</div>' :
       list.map(id => favRow(id)).join(''));
+}
+function exportFav() {
+  const ids = S.fav.filter(id => !isHidden(id));
+  if (!ids.length) { toast('生词本是空的'); return; }
+  const groups = TOPICS.map(t => ({ t, ids: ids.filter(id => WORDS_DATA[id][0] === t) })).filter(g => g.ids.length);
+  const now = new Date();
+  const dateStr = now.getFullYear() + '年' + (now.getMonth() + 1) + '月' + now.getDate() + '日';
+  let rows = ''; let n = 0;
+  groups.forEach(g => {
+    rows += '<tr class="g"><td colspan="4">' + esc(g.t) + '</td></tr>';
+    g.ids.forEach(id => {
+      n++; const w = WORDS_DATA[id];
+      rows += '<tr><td>' + n + '</td><td class="v">' + esc(w[1]) + '</td><td>' + esc(w[2]) + '</td><td>' + esc(shortTopic(w[0])) + '</td></tr>';
+    });
+  });
+  const html = '<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><title>越南语生词本 · 打印清单</title><style>' +
+    'body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;margin:24px;color:#222}' +
+    'h1{font-size:22px;margin:0 0 4px}.meta{font-size:13px;color:#666;margin:0}' +
+    '.bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}' +
+    '.btn{background:#4aa3df;color:#fff;border:none;padding:10px 20px;border-radius:8px;font-size:14px;cursor:pointer}' +
+    'table{width:100%;border-collapse:collapse;font-size:14px}th,td{border:1px solid #ccc;padding:7px 10px;text-align:left}' +
+    'th{background:#f2f7fc}.g td{background:#eef3f8;font-weight:700;font-size:13px}.v{font-weight:700}' +
+    '@media print{.btn{display:none}body{margin:8px}}' +
+    '</style></head><body>' +
+    '<div class="bar"><div><h1>越南语生词本 · 打印清单</h1><p class="meta">' + dateStr + ' · 共 ' + ids.length + ' 词 · 东兴还珠越南语培训中心</p></div>' +
+    '<button class="btn" onclick="window.print()">🖨️ 打印 / 保存 PDF</button></div>' +
+    '<table><thead><tr><th style="width:48px">#</th><th>越南语</th><th>中文</th><th style="width:110px">分类</th></tr></thead><tbody>' + rows + '</tbody></table>' +
+    '</body></html>';
+  const w = window.open('', '_blank');
+  if (!w) { toast('浏览器拦截了弹窗，请允许弹窗后重试'); return; }
+  w.document.open(); w.document.write(html); w.document.close();
 }
 function favRow(id) {
   const w = WORDS_DATA[id];
@@ -575,7 +700,7 @@ function favRow(id) {
 }
 function masterWord(id) { if (!S.learned[id]) S.learned[id] = { b: 0, due: 0, r: 0, w: 0 }; S.learned[id].b = 6; S.learned[id].due = Date.now() + interval(6); save(); toast('标记为已掌握'); renderFav(); }
 function flashFav() {
-  const ids = shuffle(S.fav.slice());
+  const ids = shuffle(S.fav.filter(id => !isHidden(id)));
   if (!ids.length) { toast('生词本是空的'); return; }
   Sess = { ids, freshSet: new Set(), i: 0, right: 0, wrong: [], newList: [], startNew: learnedCount() };
   renderStudy();
@@ -584,32 +709,37 @@ function flashFav() {
 /* ============ 词表 ============ */
 let WORD_FILTER = { topic: null, q: '' };
 function renderWords() {
-  $('#topbar').innerHTML = '<h1>📚 全部词表</h1><div class="sub">' + WORDS_DATA.length + ' 词 · 11 类</div>';
+  WORD_FILTER.active = false;
+  $('#topbar').innerHTML = '<h1>📚 全部词表</h1><div class="sub">' + visCount() + ' 词 · ' + TOPICS.length + ' 类</div>';
   let html = TOPICS.map((t, i) => {
-    const n = WORDS_DATA.filter(w => w[0] === t).length;
-    const l = WORDS_DATA.reduce((c, w, idx) => c + (w[0] === t && S.learned[idx] ? 1 : 0), 0);
+    const n = WORDS_DATA.filter(w => w[0] === t && !S.hidden.includes(w[1])).length;
+    const l = WORDS_DATA.reduce((c, w, idx) => c + (w[0] === t && !S.hidden.includes(w[1]) && S.learned[idx] ? 1 : 0), 0);
     return '<div class="topic-row" onclick="openTopic(' + i + ')"><span class="emoji">' + emojiFor(t) + '</span>' +
       '<div class="nm">' + esc(shortTopic(t)) + '</div>' +
       '<div class="cnt">' + l + ' / ' + n + '</div>' +
       '<span style="color:var(--sub)">›</span></div>';
   }).join('');
-  html += '<div class="topic-row" onclick="openTopic(-1)" style="background:var(--grad);color:#fff;border-radius:14px;padding:14px;margin-top:10px;box-shadow:0 6px 14px rgba(232,69,44,.25)">' +
-    '<span class="emoji">🗂️</span><div class="nm">全部词汇（含搜索）</div><div class="cnt" style="color:rgba(255,255,255,.8)">' + WORDS_DATA.length + '</div><span>›</span></div>';
-  $('#main').innerHTML = html + '<div class="foot-note">点击分类进入单词列表 · 星标加入生词本</div>';
+  html += '<div class="topic-row" onclick="openTopic(-1)" style="background:var(--grad);color:#fff;border-radius:14px;padding:14px;margin-top:10px;box-shadow:0 6px 14px rgba(74,163,223,.25)">' +
+    '<span class="emoji">🗂️</span><div class="nm">全部词汇（含搜索）</div><div class="cnt" style="color:rgba(255,255,255,.8)">' + visCount() + '</div><span>›</span></div>';
+  html += '<div class="topic-row" onclick="renderHidden()"><span class="emoji">🙈</span><div class="nm">已隐藏词汇（自定义词库）</div><div class="cnt">' + S.hidden.length + '</div><span>›</span></div>';
+  $('#main').innerHTML = html + '<div class="foot-note">点击分类进入单词列表 · 星标加入生词本 · 隐藏单词可自定义词库</div>';
 }
 function openTopic(i) {
   WORD_FILTER = { topic: i, q: '' };
   renderWordList();
 }
 function renderWordList() {
+  WORD_FILTER.active = true;
   $('#topbar').innerHTML = '<div class="topbar-row"><button class="btn-back" onclick="renderWords()">‹</button><h1 style="font-size:17px">' + (WORD_FILTER.topic < 0 ? '全部词汇' : esc(shortTopic(TOPICS[WORD_FILTER.topic]))) + '</h1></div>';
   const q = (WORD_FILTER.q || '').toLowerCase();
   let ids = [];
   WORDS_DATA.forEach((w, i) => {
+    if (S.hidden.includes(w[1])) return;
     if (WORD_FILTER.topic >= 0 && w[0] !== TOPICS[WORD_FILTER.topic]) return;
     if (q && !w[1].toLowerCase().includes(q) && !w[2].toLowerCase().includes(q)) return;
     ids.push(i);
   });
+  ids.sort((a, b) => { const ta = TOPICS.indexOf(WORDS_DATA[a][0]), tb = TOPICS.indexOf(WORDS_DATA[b][0]); return ta !== tb ? ta - tb : a - b; });
   const total = ids.length;
   const shown = ids.slice(0, WORD_FILTER._n || 400);
   $('#main').innerHTML =
@@ -623,6 +753,7 @@ function renderWordList() {
         '<div style="flex:1"><div class="v">' + esc(w[1]) + '</div><div class="m">' + esc(w[2]) + '</div></div>' +
         '<button class="icon-btn" onclick="event.stopPropagation();speak(\'' + esc(w[1]).replace(/'/g, "\\'") + '\')">🔊</button>' +
         '<button class="icon-btn' + (fav ? ' on' : '') + '" onclick="event.stopPropagation();toggleFav(' + id + ');renderWordList()">' + (fav ? '⭐' : '☆') + '</button>' +
+        '<button class="icon-btn" onclick="event.stopPropagation();hideWord(' + id + ')">🙈</button>' +
       '</div>';
     }).join('') +
     (shown.length < total ? '<div style="margin-top:14px"><button class="btn gray sm" onclick="WORD_FILTER._n=(WORD_FILTER._n||400)+400;renderWordList()">加载更多（' + (total - shown.length) + '）</button></div>' : '');
@@ -631,10 +762,11 @@ function renderWordList() {
 /* ============ 我的 ============ */
 function renderMe() {
   $('#topbar').innerHTML = '<h1>👤 我的</h1><div class="sub">统计 · 设置 · 数据</div>';
-  const total = WORDS_DATA.length;
+  const total = visCount();
   const lc = learnedCount();
   const mc = masterCount();
   const days30 = heatmap();
+  const rs = reviewStats();
   $('#main').innerHTML =
     '<div class="stat-grid" style="grid-template-columns:repeat(3,1fr)">' +
       '<div class="stat"><div class="n">' + lc + '</div><div class="l">已学 / ' + total + '</div></div>' +
@@ -643,10 +775,20 @@ function renderMe() {
     '</div>' +
     '<div class="section-title">近 30 天学习</div>' +
     '<div class="card" style="display:flex;flex-wrap:wrap;gap:4px">' + days30 + '</div>' +
+    '<div class="section-title">学习报告</div>' +
+    '<div class="card" style="padding:14px">' +
+      '<div class="stat-grid" style="grid-template-columns:repeat(2,1fr);margin-bottom:10px">' +
+        '<div class="stat"><div class="n">' + weekSum() + '</div><div class="l">本周学习（词）</div></div>' +
+        '<div class="stat"><div class="n">' + rs.r + '</div><div class="l">累计复习（次）</div></div>' +
+        '<div class="stat"><div class="n">' + (rs.r > 0 ? Math.round((rs.r - rs.w) / rs.r * 100) + '%' : '—') + '</div><div class="l">整体正确率</div></div>' +
+        '<div class="stat"><div class="n">' + Object.keys(S.days).length + '</div><div class="l">累计学习（天）</div></div>' +
+      '</div>' +
+      '<div class="foot-note" style="margin:0">正确率按「认识次数 ÷ 复习总数」估算，复习越多越接近真实水平。</div>' +
+    '</div>' +
     '<div class="section-title">设置</div>' +
     '<div class="card" style="padding:6px 14px">' +
       '<div class="set-row"><div><div class="l">每日新词数</div><div class="d">当前 ' + S.set.perDay + ' 个</div></div>' +
-      '<div class="rate-seg">' + [50, 100, 200, 300, 500].map(n => '<button class="' + (S.set.perDay === n ? 'on' : '') + '" onclick="setPerDay(' + n + ')">' + n + '</button>').join('') + '</div></div>' +
+      '<div class="rate-seg">' + [10, 20, 50, 100].map(n => '<button class="' + (S.set.perDay === n ? 'on' : '') + '" onclick="setPerDay(' + n + ')">' + n + '</button>').join('') + '</div></div>' +
       '<div class="set-row"><div><div class="l">发音语速</div><div class="d">' + ['慢', '正常', '快'][Math.round(S.set.rate * 2) - 1] + '</div></div>' +
       '<div class="rate-seg">' + [['慢', 0.8], ['正常', 1], ['快', 1.2]].map(r => '<button class="' + (S.set.rate === r[1] ? 'on' : '') + '" onclick="setRate(' + r[1] + ')">' + r[0] + '</button>').join('') + '</div></div>' +
       '<div class="set-row"><div><div class="l">自动发音</div><div class="d">展示单词时自动朗读</div></div>' +
@@ -664,7 +806,7 @@ function renderMe() {
       '<button class="btn sm" style="width:auto;padding:8px 16px;background:var(--bad)" onclick="resetData()">清空</button></div>' +
     '</div>' +
     '<input type="file" id="imp" accept="application/json" style="display:none" onchange="importData(this)">' +
-    '<div class="foot-note">数据版本 2026-08-11c<br>' + total + ' 词 · 11 类 · 单文件离线 App</div>';
+    '<div class="foot-note">数据版本 2026-08-15d<br>' + total + ' 词 · ' + TOPICS.length + ' 类 · PWA 离线 App</div>';
 }
 function heatmap() {
   let html = '';
@@ -672,10 +814,24 @@ function heatmap() {
   for (let i = 29; i >= 0; i--) {
     const d = new Date(now); d.setDate(d.getDate() - i);
     const c = S.days[keyOf(d)] ? S.days[keyOf(d)].n + S.days[keyOf(d)].r : 0;
-    const lv = c === 0 ? '#eee' : c < 10 ? '#fbd9a8' : c < 30 ? '#f5a25c' : '#e8452c';
+    const lv = c === 0 ? '#eee' : c < 10 ? '#d9ebfa' : c < 30 ? '#8fc2e9' : '#4aa3df';
     html += '<div style="width:18px;height:18px;border-radius:5px;background:' + lv + '" title="' + keyOf(d) + ' ' + c + '词"></div>';
   }
   return html;
+}
+function weekSum() {
+  let s = 0; const now = new Date();
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(now); d.setDate(d.getDate() - i);
+    const k = keyOf(d);
+    if (S.days[k]) s += S.days[k].n + S.days[k].r;
+  }
+  return s;
+}
+function reviewStats() {
+  let r = 0, w = 0;
+  Object.values(S.learned).forEach(L => { r += L.r || 0; w += L.w || 0; });
+  return { r, w };
 }
 function setPerDay(n) { S.set.perDay = n; save(); renderMe(); toast('每日新词改为 ' + n); }
 function setRate(r) { S.set.rate = r; save(); renderMe(); }
@@ -695,7 +851,7 @@ function importData(input) {
     try {
       const s = JSON.parse(rd.result);
       if (!s || s.v !== 1) throw new Error('bad');
-      S = s; if (S.set.dark) document.body.classList.add('dark'); save(); renderMe();
+      S = s; normalize(); if (S.set.dark) document.body.classList.add('dark'); save(); renderMe();
       toast('导入成功');
     } catch (e) { toast('文件格式不对'); }
   };
@@ -707,8 +863,24 @@ function resetData() {
 }
 
 /* ============ 启动 ============ */
+function isWeChatIOS() {
+  const ua = navigator.userAgent || '';
+  return /MicroMessenger/i.test(ua) && /iP(hone|ad|od)/i.test(ua);
+}
+function maybeWxGuide() {
+  if (!isWeChatIOS()) return;
+  guideBox('建议在 Safari 中打开',
+    '微信内置浏览器对「添加到主屏幕 / 离线使用」支持不完整，可能无法正常显示。<br><br>' +
+    '① 点右上角「···」<br>② 选择「在 Safari 中打开」<br>③ 点底部「分享」→「添加到主屏幕」<br><br>' +
+    '之后从主屏幕图标进入，全屏且断网也能用。');
+}
 switchTab('home');
+maybeWxGuide();
 window.addEventListener('keydown', e => { if (e.key === 'Enter' && TEST && TEST.mode === 'type') { e.preventDefault(); checkType(); } });
 </script>
+<script>
+if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
+  window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });
+}
+</script>
 </body>
-</html>

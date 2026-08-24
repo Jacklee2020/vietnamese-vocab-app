@@ -1,54 +1,24 @@
 # -*- coding: utf-8 -*-
-"""从单文件 App 生成可托管的 PWA 版（index.html + manifest + sw + 图标）。
-
-注意：仓库根目录的「越南语背单词App.html」是内部工作文件（已被 .gitignore 排除），
-clone 后请把该文件放回仓库根目录再运行本脚本；若源文件不存在，脚本会直接退出。
-"""
-import json, os, sys
+"""生成可托管的 PWA 版静态资源（manifest.webmanifest + sw.js + 图标）。"""
+import json
+import os
+import sys
 from PIL import Image, ImageDraw
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-SRC = os.path.join(HERE, '越南语背单词App.html')
 OUT = os.path.join(HERE, 'pwa')
 
-# manifest / sw 当前版本常量（与仓库中 pwa/ 目录保持一致，修改时请同步）
 APP_NAME = "越南语千词斩"
 APP_SHORT = "越南语千词斩"
 APP_DESC = "越南语词汇学习 PWA · 4621 词 · 12 大类 · 离线可用"
 THEME_COLOR = "#4aa3df"
 CACHE_NAME = "vnvocab-v8"
 
+
 def main() -> int:
-    if not os.path.exists(SRC):
-        print("❌ 未找到源文件：越南语背单词App.html（内部工作文件，未随仓库发布）")
-        print("   请将该文件放回仓库根目录后重试。")
-        return 1
-
     os.makedirs(OUT, exist_ok=True)
-    html = open(SRC, encoding='utf-8').read()
 
-    # 1) head 注入 manifest / apple-touch-icon
-    head_add = ('<link rel="icon" href="apple-touch-icon.png">\n'
-                '<link rel="manifest" href="manifest.webmanifest">\n'
-                '<link rel="apple-touch-icon" href="apple-touch-icon.png">\n'
-                '<meta name="apple-mobile-web-app-title" content="' + APP_SHORT + '">\n'
-                '<meta name="apple-mobile-web-app-capable" content="yes">\n')
-    assert '<meta name="theme-color"' in html
-    html = html.replace('<meta name="theme-color" content="#e8452c">',
-                        head_add + '<meta name="theme-color" content="' + THEME_COLOR + '">', 1)
-
-    # 2) 注册 Service Worker（仅 https / localhost，file:// 下自动跳过）
-    sw_reg = ('<script>\n'
-              "if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {\n"
-              "  window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });\n"
-              '}\n'
-              '</script>\n</body>')
-    assert html.count('</body>') == 1
-    html = html[:html.rfind('</body>')] + sw_reg
-
-    open(os.path.join(OUT, 'index.html'), 'w', encoding='utf-8').write(html)
-
-    # 3) manifest
+    # 1) manifest.webmanifest
     manifest = {
         "name": APP_NAME,
         "short_name": APP_SHORT,
@@ -65,9 +35,10 @@ def main() -> int:
             {"src": "icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"},
         ],
     }
-    open(os.path.join(OUT, 'manifest.webmanifest'), 'w', encoding='utf-8').write(json.dumps(manifest, ensure_ascii=False, indent=2))
+    with open(os.path.join(OUT, 'manifest.webmanifest'), 'w', encoding='utf-8') as f:
+        f.write(json.dumps(manifest, ensure_ascii=False, indent=2))
 
-    # 4) Service Worker：HTML 走 network-first，静态资源 stale-while-revalidate
+    # 2) Service Worker：HTML 走 network-first，静态资源 stale-while-revalidate
     sw = '''/* ''' + APP_NAME + ''' PWA 离线缓存 */
 const CACHE = ''' + "'" + CACHE_NAME + "'" + ''';
 const ASSETS = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-512-maskable.png', './apple-touch-icon.png'];
@@ -101,9 +72,10 @@ self.addEventListener('fetch', e => {
   );
 });
 '''
-    open(os.path.join(OUT, 'sw.js'), 'w', encoding='utf-8').write(sw)
+    with open(os.path.join(OUT, 'sw.js'), 'w', encoding='utf-8') as f:
+        f.write(sw)
 
-    # 5) 图标
+    # 3) 图标生成
     def draw_icon(size, maskable=False):
         img = Image.new('RGBA', (size, size), (0, 0, 0, 0))
         d = ImageDraw.Draw(img)
@@ -132,7 +104,7 @@ self.addEventListener('fetch', e => {
     draw_icon(192).save(os.path.join(OUT, 'icon-192.png'))
     draw_icon(180).save(os.path.join(OUT, 'apple-touch-icon.png'))
 
-    print('PWA 版已生成:')
+    print('PWA 资源生成完毕:')
     for f in sorted(os.listdir(OUT)):
         print(' -', f, os.path.getsize(os.path.join(OUT, f)), 'B')
     return 0
