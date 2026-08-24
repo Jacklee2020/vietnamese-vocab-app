@@ -1,5 +1,6 @@
 // 深度审计测试：验证从 v1.0 到 v1.8.1 所有历史特性的完整性与运行正常
 const path = require('path');
+const fs = require('fs');
 const { chromium } = require('playwright');
 
 const APP = 'file://' + path.resolve(__dirname, 'pwa/index.html');
