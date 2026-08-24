@@ -14,9 +14,9 @@ OUT = os.path.join(HERE, 'pwa')
 # manifest / sw 当前版本常量（与仓库中 pwa/ 目录保持一致，修改时请同步）
 APP_NAME = "越南语千词斩"
 APP_SHORT = "越南语千词斩"
-APP_DESC = "越南语词汇学习 PWA · 3378 词 · 12 大类 · 离线可用"
+APP_DESC = "越南语词汇学习 PWA · 4621 词 · 12 大类 · 离线可用"
 THEME_COLOR = "#4aa3df"
-CACHE_NAME = "vnvocab-v7"
+CACHE_NAME = "vnvocab-v8"
 
 def main() -> int:
     if not os.path.exists(SRC):

@@ -109,7 +109,7 @@ function check(name, cond, extra) {
   const rows = await page.locator('.row').count();
   check('主题词列表有内容', rows > 0, 'rows=' + rows);
   const totalWords = await page.evaluate(() => WORDS_DATA.length);
-  check('数据嵌入 3378 词', totalWords === 3378, 'WORDS_DATA=' + totalWords);
+  check('数据嵌入 4621 词', totalWords === 4621, 'WORDS_DATA=' + totalWords);
   await page.locator('.search').fill('Hà Nội');
   await page.waitForTimeout(300);
   const srch = await page.textContent('body');

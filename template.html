@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#e8452c">
-<title>越南语背单词 · 3000词</title>
+<title>越南语千词斩 · Vietnamese Vocabulary Trainer</title>
 <style>
 :root{
   --bg:#f3f4f6; --card:#ffffff; --text:#1c1c1e; --sub:#8e8e93;
@@ -285,7 +285,7 @@ function switchTab(name) {
 
 /* ============ 首页 ============ */
 function renderHome() {
-  $('#topbar').innerHTML = '<h1>🇻🇳 越南语背单词</h1><div class="sub">核心词汇 3000 · 2026-08-11 校对版</div>';
+  $('#topbar').innerHTML = '<h1>🇻🇳 越南语千词斩</h1><div class="sub">核心词汇 ' + WORDS_DATA.length + ' · A1-B2 考试词库增强版</div>';
   const due = dueReviewIds().length;
   const fresh = newWordIds(S.set.perDay).length;
   const today = S.days[todayKey()];
