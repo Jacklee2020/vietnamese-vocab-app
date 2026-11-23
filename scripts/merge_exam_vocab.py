@@ -351,38 +351,58 @@ def main():
     print(f"✅ 全量词库更新完毕：{len(merged_rows)} 词 · 12 大类")
     print(f"   目标文件：{APP_CSV}")
 
-    # 6. 生成 XLSX (如果 openpyxl 可用)
+    # 6. 使用内置 zipfile 零依赖同步更新 XLSX（保留 12 类配色、冻结首行与自动筛选）
     try:
-        from openpyxl import Workbook
-        from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+        import zipfile
+        from xml.sax.saxutils import escape
 
-        wb = Workbook()
-        ws = wb.active
-        ws.title = "词库合并版"
-        ws.append(["序号", "分类", "越南语", "中文"])
-        hfill = PatternFill("solid", fgColor="1F4E79")
-        hfont = Font(color="FFFFFF", bold=True, size=11)
-        for c in range(1, 5):
-            cell = ws.cell(row=1, column=c)
-            cell.fill = hfill; cell.font = hfont
-            cell.alignment = Alignment(horizontal="center", vertical="center")
-        thin = Border(*[Side(style="thin", color="BFBFBF")]*4)
-        palette = ["FFFFFF", "EAF1F8", "F5F0E6"]
-        ti = 0; prev_theme = None
-        for i, (s, cat, vi, zh) in enumerate(merged_rows, 2):
-            if cat != prev_theme:
-                ti += 1; prev_theme = cat
-            fill = PatternFill("solid", fgColor=palette[ti % len(palette)])
-            for c, v in enumerate([s, cat, vi, zh], 1):
-                cell = ws.cell(row=i, column=c, value=v)
-                cell.border = thin; cell.fill = fill
-                cell.alignment = Alignment(vertical="center")
-        for col, wd in zip("ABCD", [8, 38, 30, 28]):
-            ws.column_dimensions[col].width = wd
-        ws.freeze_panes = "A2"
-        ws.auto_filter.ref = f"A1:D{len(merged_rows)+1}"
-        wb.save(APP_XLSX)
-        print(f"📊 Excel 版本已更新：{APP_XLSX}")
+        cat_styles = {cat: (2 * i, 2 * i + 1) for i, cat in enumerate(CATEGORIES, 1)}
+        max_row = len(merged_rows) + 1
+        dim_ref = f"A1:D{max_row}"
+        sheet_parts = [
+            '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'
+            '<sheetPr><outlinePr summaryBelow="1" summaryRight="1" /><pageSetUpPr /></sheetPr>'
+            f'<dimension ref="{dim_ref}" />'
+            '<sheetViews><sheetView workbookViewId="0">'
+            '<pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen" />'
+            '<selection pane="bottomLeft" activeCell="A1" sqref="A1" />'
+            '</sheetView></sheetViews>'
+            '<sheetFormatPr baseColWidth="8" defaultRowHeight="15" />'
+            '<cols>'
+            '<col width="7" customWidth="1" min="1" max="1" />'
+            '<col width="42" customWidth="1" min="2" max="2" />'
+            '<col width="30" customWidth="1" min="3" max="3" />'
+            '<col width="34" customWidth="1" min="4" max="4" />'
+            '</cols><sheetData>'
+            '<row r="1">'
+            '<c r="A1" s="1" t="inlineStr"><is><t>序号</t></is></c>'
+            '<c r="B1" s="1" t="inlineStr"><is><t>分类</t></is></c>'
+            '<c r="C1" s="1" t="inlineStr"><is><t>越南语</t></is></c>'
+            '<c r="D1" s="1" t="inlineStr"><is><t>中文</t></is></c>'
+            '</row>'
+        ]
+        for idx, (s, cat, vi, zh) in enumerate(merged_rows, start=2):
+            sa, sb = cat_styles.get(cat, (22, 23))
+            sheet_parts.append(
+                f'<row r="{idx}">'
+                f'<c r="A{idx}" s="{sa}" t="n"><v>{int(s)}</v></c>'
+                f'<c r="B{idx}" s="{sb}" t="inlineStr"><is><t>{escape(cat)}</t></is></c>'
+                f'<c r="C{idx}" s="{sb}" t="inlineStr"><is><t>{escape(vi)}</t></is></c>'
+                f'<c r="D{idx}" s="{sb}" t="inlineStr"><is><t>{escape(zh)}</t></is></c>'
+                f'</row>'
+            )
+        sheet_parts.append(
+            f'</sheetData><autoFilter ref="{dim_ref}" />'
+            '<pageMargins left="0.75" right="0.75" top="1" bottom="1" header="0.5" footer="0.5" />'
+            '</worksheet>'
+        )
+        with zipfile.ZipFile(APP_XLSX, 'r') as zin:
+            entries = {name: zin.read(name) for name in zin.namelist()}
+        entries['xl/worksheets/sheet1.xml'] = ''.join(sheet_parts).encode('utf-8')
+        with zipfile.ZipFile(APP_XLSX, 'w', compression=zipfile.ZIP_DEFLATED) as zout:
+            for name, data in entries.items():
+                zout.writestr(name, data)
+        print(f"📊 Excel 版本已同步更新：{APP_XLSX}")
     except Exception as e:
         print(f"⚠️ 生成 Excel 出现异常（不影响 CSV）：{e}")
 

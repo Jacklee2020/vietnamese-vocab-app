@@ -198,12 +198,16 @@ vocab_app/
 │   ├── manifest.webmanifest # PWA 清单
 │   ├── sw.js                # Service Worker（离线缓存）
 │   └── icon-*.png           # 应用图标
+├── scripts/                 # 词库与同步自动化脚本
+│   ├── validate_dict.py     # 词库格式、音节纯净度与 Excel 同步校验
+│   ├── check_html_sync.py   # CSV 与 HTML 内嵌词库 1:1 同步校验
+│   └── merge_exam_vocab.py  # A1-B2 等级考试词库清洗与合入
 ├── 词库_合并版.csv          # 完整词库（可编辑原始数据，UTF-8）
-├── 词库_合并版.xlsx         # 完整词库（Excel 版）
+├── 词库_合并版.xlsx         # 完整词库（Excel 版，12 类配色）
 ├── merge_data.py            # 词库合并、去重、校对脚本
 ├── make_pwa.py              # PWA 构建脚本
 ├── make_app.py / template.html  # 单文件生成脚本与模板
-├── *_test.cjs / debug_quiz.cjs  # 开发测试脚本
+├── audit_test.cjs / test_app.cjs / pwa_test.cjs  # E2E 与全版本特性审计测试
 └── README.md
 ```
 
@@ -217,7 +221,7 @@ vocab_app/
 - [x] 卡片式间隔复习、三种自测、离线缓存、进度备份
 - [ ] 词库持续扩充与例句补充（母语者校对）
 - [x] 自适应复习算法（错词优先，答错后 4 小时可再练）
-- [ ] 学习统计报告（周报 / 月度回顾）
+- [x] 学习统计报告（周报 / 月度回顾）
 - [ ] 云端同步（可选，默认仍保持离线）
 
 ## 📄 许可

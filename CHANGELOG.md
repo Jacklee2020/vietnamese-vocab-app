@@ -2,6 +2,18 @@
 
 本文件记录「越南语千词斩」的版本更新与修复内容，遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/) 风格。
 
+## [v1.8.2] - 2026-11-23
+
+### 🧹 词库精洗与工程维护
+
+- **词库深度精洗（300 条 OCR 脏词修复）**：全面清理 A1-B2 考试词表合入时残留的音节断裂（如 `mì nh` → `chính mình`、`tì nh bạn` → `tình bạn đẹp`、`kh ám ph á` → `khám phá`）、英文释义串列（如 `mùa mưa rainy seas` → `vào mùa mưa`、`sinh sống live` → `nơi sinh sống`）、末尾截断（如 `bài ng` → `nghe bài nghe`、`vé xem p` → `vé xem phim`）及中文页眉污染（`宇宙 2/3/2 D TESTS...` → `宇宙`），保持 **4,621 词 · 12 大类** 原位索引不变，100% 兼容学员已有本地学习进度。
+- **Excel 词库同步（零依赖）**：同步更新 `词库_合并版.xlsx` 至最新 4,621 词（保留 12 类主题配色、首行冻结与自动筛选），升级 `scripts/validate_dict.py` 增加越南语音节纯净度、中越字符越界与 Excel 行数一致性校验。
+- **工程与版本细节维护**：
+  - 「我的」页底部版本信息更新为 `版本 v1.8.2 · 词库 2026-11-23`；
+  - Service Worker 缓存版本升级至 `vnvocab-v9`；
+  - 内部中间文件 `新增清单_*.csv` 纳入 `.gitignore`；
+  - 更新 `README.md` 路线图与目录结构，升级 CI Node.js 运行环境。
+
 ## [v1.8.1] - 2026-08-24
 
 ### 🐛 修复与特性恢复
